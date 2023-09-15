@@ -50,6 +50,7 @@ jobs:
           NEXT_PUBLIC_KC_REALM: ${{ vars.KC_REALM }}
           NEXT_PUBLIC_KC_CLIENT_ID: ${{ vars.KC_CLIENT_ID }}
           NEXT_PUBLIC_KC_REDIRECT_URI: ${{ vars.KC_REDIRECT_URI }}
+          NEXT_PUBLIC_KC_SECRET: ${{ secrets.KC_SECRET }}
 
       - name: Build api
         run: make build-api

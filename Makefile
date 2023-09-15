@@ -9,7 +9,7 @@ export PROJECT := $(or $(PROJECT),ehpr)
 
 
 # Runtime and application Environments specific variable
-export ENV_NAME ?= dev
+export ENV_NAME ?= local
 export POSTGRES_USERNAME = freshworks
 export CHES_CLIENT_ID ?= CDACC9DF-CDF62AA2355
 
@@ -24,9 +24,6 @@ export TEST_POSTGRES_PORT := 5433
 export COMMIT_SHA:=$(shell git rev-parse --short=7 HEAD)
 export LAST_COMMIT_MESSAGE:=$(shell git log -1 --oneline --decorate=full --no-color --format="%h, %cn, %f, %D" | sed 's/->/:/')
 
-# FE Env Vars
-export NEXT_PUBLIC_API_URL ?= /api/v1
-
 # Docker container names
 LOCAL_API_CONTAINER_NAME = $(PROJECT)_api
 
@@ -39,6 +36,13 @@ APP_SRC_BUCKET = $(NAMESPACE)-app-dist
 TERRAFORM_DIR = terraform
 export BOOTSTRAP_ENV=terraform/bootstrap
 
+
+# FE Env Vars
+export NEXT_PUBLIC_API_URL ?= /api/v1
+export NEXT_PUBLIC_KC_URL ?= http://localhost:8080
+export NEXT_PUBLIC_KC_REALM ?= ehpr
+export NEXT_PUBLIC_KC_CLIENT_ID ?= ehpr-app
+export NEXT_PUBLIC_KC_REDIRECT_URI ?= http://localhost:3000/login
 
 ifeq ($(ENV_NAME), prod)
 DOMAIN=ehpr.gov.bc.ca

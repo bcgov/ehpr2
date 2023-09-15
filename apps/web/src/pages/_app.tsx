@@ -14,6 +14,7 @@ function App({ Component, pageProps }: AppProps) {
     authority: `${process.env.NEXT_PUBLIC_KC_URL}/realms/${process.env.NEXT_PUBLIC_KC_REALM}`,
     client_id: `${process.env.NEXT_PUBLIC_KC_CLIENT_ID}`,
     redirect_uri: `${process.env.NEXT_PUBLIC_KC_REDIRECT_URI}`,
+    client_secret: `${process.env.NEXT_PUBLIC_KC_SECRET}`,
     onSigninCallback: async kcUser => {
       if (kcUser) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${kcUser.access_token}`;
