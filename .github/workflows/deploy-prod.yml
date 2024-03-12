@@ -7,6 +7,11 @@ env:
   PROJECT: ehpr
   ENV_NAME: prod
   TF_VERSION: 1.1.1
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -16,11 +21,16 @@ jobs:
       name: prod
     env:
       CLOUDFRONT_ID: '${{ secrets.CLOUDFRONT_ID }}'
+      AWS_ACCOUNT_ID: '${{ secrets.AWS_ACCOUNT_ID}}'
     steps:
-      - uses: actions/checkout@v2
-        name: checkout
+      - name: Git clone the repository
+        uses: actions/checkout@v4
+      - name: setup node v16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         name: Cache yarn
         with:
           path: ./.yarn/cache
@@ -30,10 +40,11 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - uses: hashicorp/setup-terraform@v1
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v3
         with:
-          terraform_version: ${{ env.TF_VERSION }}
-          cli_config_credentials_token: ${{ secrets.TFC_TEAM_TOKEN }}
+          role-to-assume: ${{secrets.AWS_SA_ROLE_ARN}}
+          aws-region: ca-central-1
 
       - name: Print Environment
         run: make print-env
@@ -48,20 +59,10 @@ jobs:
           NEXT_PUBLIC_KC_REALM: ${{ vars.KC_REALM }}
           NEXT_PUBLIC_KC_CLIENT_ID: ${{ vars.KC_CLIENT_ID }}
           NEXT_PUBLIC_KC_REDIRECT_URI: ${{ vars.KC_REDIRECT_URI }}
+          NEXT_PUBLIC_KC_SECRET: ${{ secrets.KC_SECRET }}
 
       - name: Build api
         run: make build-api
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-skip-session-tagging: true
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY_ID }}
-          aws-region: ca-central-1
-          role-to-assume: ${{ secrets.AWS_SA_ROLE_ARN }}
-          role-duration-seconds: 900
-          role-session-name: ci-deployment
 
       - name: Terraform config
         run: |
