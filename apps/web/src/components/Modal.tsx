@@ -35,7 +35,7 @@ const ModalContainer: React.FC<ModalProps> = ({ children, open, handleClose }) =
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity' />
+            <div className='fixed inset-0 bg-gray-500/75 transition-opacity' />
           </TransitionChild>
 
           {/* This element is to trick the browser into centering the modal contents. */}

@@ -19,7 +19,7 @@ export const SearchInput = (props: SearchInputFields) => {
         type='text'
         value={value}
         onChange={e => onChange(e.target.value)}
-        className='flex-grow focus:outline-none'
+        className='grow focus:outline-none'
         placeholder={placeholder}
       />
     </div>

@@ -126,7 +126,7 @@ export const TemplatePreview = ({ emails, template, open, onClose }: TemplatePre
               type='text'
               value={template.subject}
               readOnly
-              className='flex-grow focus:outline-none'
+              className='grow focus:outline-none'
             />
           </div>
           <div className='mx-5 mt-2 font-bold'>Body</div>

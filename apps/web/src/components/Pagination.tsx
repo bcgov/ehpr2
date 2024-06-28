@@ -70,7 +70,7 @@ export const Pagination = (props: PaginationProps) => {
           {start} - {end} of {total} items
         </span>
       </div>
-      <div className='flex flex-row flex-grow justify-end'>
+      <div className='flex flex-row grow justify-end'>
         <div className='px-3 pt-4 border-l border-r h-100 text-sm'>
           <select
             aria-label='page select'

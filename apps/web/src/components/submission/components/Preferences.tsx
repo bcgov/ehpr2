@@ -1,4 +1,3 @@
-import ReactSelect from 'react-select';
 import {
   FormStepHeader,
   Radio,
@@ -8,8 +7,8 @@ import {
   Error,
   CheckboxArray,
   Field,
-  selectStyleOverride,
 } from '@components';
+import { BasicSelect } from '@components';
 import { getLhasbyHaId, HaId } from '@ehpr/common';
 import { FieldProps, useFormikContext } from 'formik';
 import { useEffect, useRef } from 'react';
@@ -110,16 +109,16 @@ export const Preferences: React.FC<FormStepProps> = () => {
               label={'Last Deployed Health Authority'}
             >
               {({ field, form }: FieldProps) => (
-                <ReactSelect<OptionType>
-                  inputId={field.name}
-                  value={(healthAuthorityOptions || []).find(o => o.value === field.value)}
-                  onBlur={field.onBlur}
-                  onChange={value => form.setFieldValue(field.name, value?.value)}
+                <BasicSelect
+                  id={field.name}
+                  value={
+                    field.value || (healthAuthorityOptions || []).find(o => o.value === field.value)
+                  }
                   options={(healthAuthorityOptions || []).map(o => ({
                     ...o,
                   }))}
-                  styles={selectStyleOverride}
-                  menuPlacement='auto'
+                  onChange={value => form.setFieldValue(field.name, value)}
+                  menuPlacement='bottom'
                 />
               )}
             </Field>

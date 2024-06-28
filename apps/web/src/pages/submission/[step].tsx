@@ -22,7 +22,7 @@ const Submission = () => {
 
   return (
     <>
-      <div className='flex-grow bg-bcLightBackground flex justify-center md:pt-11 pt-5'>
+      <div className='grow bg-bcLightBackground flex justify-center md:pt-11 pt-5'>
         <div className='h-min w-full xl:w-layout mx-2 mb-12'>
           <h1 className='text-3xl mb-7 mx-6 lg:text-4xl lg:mb-3 lg:mx-0'>
             Health Provider Registry for BC’s Emergency Response

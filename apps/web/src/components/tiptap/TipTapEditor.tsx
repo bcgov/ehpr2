@@ -85,6 +85,7 @@ export const TipTapEditor = ({
       onChange(editor.getHTML());
     },
     editable: isEditable,
+    injectCSS: false,
   });
 
   const onChange = useCallback((value: string) => {

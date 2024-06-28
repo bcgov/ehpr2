@@ -3,9 +3,9 @@ import { useState } from 'react';
 import createValidator from 'class-validator-formik';
 import { FieldProps, Formik, Form as FormikForm } from 'formik';
 import { useRouter } from 'next/router';
-import ReactSelect from 'react-select';
-import { Button, Field, OptionType, selectStyleOverride } from '@components';
+import { Button, Field } from '@components';
 import { UnsubscribeReasonDTO, unsubscribeReasons } from '@ehpr/common';
+import { BasicSelect } from '@components';
 import { unsubscribe } from '@services';
 import { DeepPartial } from 'src/components/submission/validation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -45,13 +45,14 @@ const UnsubscribePage = () => {
                   <div className='w-full mt-5'>
                     <Field name='reason' label='Reason'>
                       {({ field, form }: FieldProps) => (
-                        <ReactSelect<OptionType>
-                          inputId={field.name}
-                          value={unsubscribeReasons.find(r => r.value === field.value)}
-                          onBlur={field.onBlur}
+                        <BasicSelect
+                          id={field.name}
+                          value={
+                            field.value || unsubscribeReasons.find(r => r.value === field.value)
+                          }
                           onChange={value => {
-                            form.setFieldValue(field.name, value?.value);
-                            if (value?.value !== 'other') {
+                            form.setFieldValue(field.name, value);
+                            if (value !== 'other') {
                               form.setFieldValue('otherReason', '');
                               form.setFieldTouched('otherReason', false);
                               form.setFieldError('otherReason', '');
@@ -61,7 +62,6 @@ const UnsubscribePage = () => {
                             ...r,
                             isDisabled: r.value === field.value,
                           }))}
-                          styles={selectStyleOverride}
                         />
                       )}
                     </Field>

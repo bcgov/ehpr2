@@ -1,20 +1,15 @@
 import { useState } from 'react';
 import { FieldProps, Form, Formik } from 'formik';
 import { createValidator } from 'class-validator-formik';
-import ReactSelect from 'react-select';
+
 import _ from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { DialogTitle } from '@headlessui/react';
 import { InviteUserDTO, Role } from '@ehpr/common';
-import {
-  Button,
-  Field,
-  Modal,
-  OptionType,
-  selectStyleOverride,
-  useAdminContext,
-} from '@components';
+import { BasicSelect } from '@components';
+
+import { Button, Field, Modal, OptionType, useAdminContext } from '@components';
 
 const roleOptions: OptionType[] = Object.values(Role)
   .filter(role => role !== Role.Pending)
@@ -24,14 +19,11 @@ const roleOptions: OptionType[] = Object.values(Role)
   }));
 
 const SelectRole = ({ field, form }: FieldProps) => (
-  <ReactSelect<OptionType>
-    inputId={field.name}
-    value={roleOptions.find(o => o.value === field.value)}
-    onBlur={field.onBlur}
-    onChange={value => form.setFieldValue(field.name, value?.value)}
+  <BasicSelect
+    id={field.name}
     options={roleOptions}
-    styles={selectStyleOverride}
-    className='w-36'
+    value={field.value || roleOptions.find(o => o.value === field.value)?.value}
+    onChange={value => form.setFieldValue(field.name, value)}
   />
 );
 

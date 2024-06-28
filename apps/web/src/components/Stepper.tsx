@@ -41,9 +41,7 @@ const Step: React.FC<StepProps> = ({ index, step, label, isLast }) => {
     <div className='flex flex-col items-start'>
       <div aria-hidden className='flex justify-center items-center'>
         <Check number={index + 1} step={step} />
-        {!isLast ? (
-          <div className='flex-grow md:w-32 w-4 mx-2 border-t-2 border-bcBlueNav' />
-        ) : null}
+        {!isLast ? <div className='grow md:w-32 w-4 mx-2 border-t-2 border-bcBlueNav' /> : null}
       </div>
       <p className='hidden md:block text-sm w-min text-gray-600 whitespace-nowrap'>{label}</p>
     </div>

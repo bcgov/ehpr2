@@ -3,7 +3,7 @@ export * from './Field';
 export * from './Label';
 export * from './Description';
 export * from './Select';
-export * from './MultiSelect';
+export * from './HeadlessList';
 export * from './Checkbox';
 export * from './Radio';
 export * from './Textarea';

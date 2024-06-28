@@ -3,13 +3,18 @@ import Head from 'next/head';
 import type { AppProps } from 'next/app';
 import { AuthProvider as OidcAuthProvider, AuthProviderProps } from 'react-oidc-context';
 import { ToastContainer } from 'react-toastify';
+import { config } from '@fortawesome/fontawesome-svg-core';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 import { AuthProvider, Footer, Header } from '@components';
 
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 function App({ Component, pageProps }: AppProps) {
+  // turn off auto adding of css for font awesome icons (svg), CSP complains about inline styles
+  config.autoAddCss = false;
+
   const oidcConfig: AuthProviderProps = {
     authority: `${process.env.NEXT_PUBLIC_KC_URL}/realms/${process.env.NEXT_PUBLIC_KC_REALM}`,
     client_id: `${process.env.NEXT_PUBLIC_KC_CLIENT_ID}`,
@@ -31,7 +36,7 @@ function App({ Component, pageProps }: AppProps) {
         </Head>
         <div className='h-full flex flex-col'>
           <Header />
-          <main className='flex-grow flex justify-center'>
+          <main className='grow flex justify-center'>
             <Component {...pageProps} />
           </main>
           <Footer />

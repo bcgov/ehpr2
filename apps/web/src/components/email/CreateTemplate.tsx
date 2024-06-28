@@ -19,7 +19,7 @@ export const CreateTemplate = ({ template, setTemplate }: CreateTemplateProps) =
           onChange={e =>
             setTemplate((prev: EmailTemplate) => ({ ...prev, subject: e.target.value }))
           }
-          className='flex-grow focus:outline-none'
+          className='grow focus:outline-none'
           placeholder='Enter Subject line...'
         />
       </div>
