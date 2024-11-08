@@ -17,29 +17,29 @@ body,
 }
 
 @layer base {
-  /* override prose list styles */
+  /* Override prose list styles */
   .prose ul,
   .prose ol {
     list-style: revert;
   }
+
   .prose a {
     color: blue !important;
   }
+
   .prose h1,
   .prose h2,
   .prose h3 {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
   }
-  /* 
-    remove the content from the ::before pseudo-element.
-    shows a single bullet by default which in turn causes 2 bullets to show in lists
-    bullet will be defined in ::marker pseudo element
-  */
+
+  /* Remove the content from the ::before pseudo-element */
   .prose ul > li::before,
   .prose ol > li::before {
     content: none !important;
   }
+
   .prose ul > li,
   .prose ol > li {
     padding-left: 0 !important;
@@ -51,6 +51,7 @@ body,
     font-family: BCSans;
     src: url('./fonts/BCSans-Regular.woff') format('woff');
   }
+
   @font-face {
     font-family: BCSans;
     font-weight: 700;
@@ -59,9 +60,20 @@ body,
 }
 
 @media (min-width: 768px) {
-  .bar-separator > *:not(:last-child):after {
+  .bar-separator > *:not(:last-child)::after {
     content: '|';
     margin: 0 0.5rem;
     color: #fff;
   }
+}
+
+/* CAPTCHA loader animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loader {
+  animation: spin 0.5s linear infinite;
 }

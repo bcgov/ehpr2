@@ -7,3 +7,4 @@ export * from './HeadlessList';
 export * from './Checkbox';
 export * from './Radio';
 export * from './Textarea';
+export * from './CaptchaField';

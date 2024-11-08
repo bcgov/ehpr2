@@ -23,6 +23,7 @@ import { preferencesDefaultValues } from './preferences';
 
 export interface SubmissionType extends SubmissionPayloadDTO {
   confirm: boolean;
+  captcha: boolean;
 }
 
 // @todo remove DeepPartial when all form steps are implemented
@@ -36,6 +37,7 @@ export const initialSubmissionValues: DeepPartial<SubmissionType> = {
   credentialInformation: credentialDefaultValues,
   preferencesInformation: preferencesDefaultValues,
   confirm: false,
+  captcha: false,
 };
 
 export const personalSchema = createValidator(PersonalInformationDTO);
@@ -86,4 +88,5 @@ export const prefilledSubmissionValues: SubmissionType = {
     deploymentType: [DeploymentTypes.FULL_TIME],
   },
   confirm: true,
+  captcha: false,
 };

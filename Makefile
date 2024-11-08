@@ -10,7 +10,7 @@ export PROJECT := $(or $(PROJECT),ehpr)
 
 # Runtime and application Environments specific variable
 export ENV_NAME ?= dev
-export POSTGRES_USERNAME = freshworks
+export POSTGRES_USERNAME ?= freshworks
 
 # Integration testing variables
 export TEST_POSTGRES_HOST := localhost
@@ -161,10 +161,10 @@ api-unit-test:
 	@echo "++\n*****"
 
 start-test-db:
-	NODE_ENV=test docker compose -f docker compose.test.yaml up --build -d
+	NODE_ENV=test docker compose -f docker-compose.test.yaml up --build -d
 
 stop-test-db:
-	NODE_ENV=test docker compose -f docker compose.test.yaml down
+	NODE_ENV=test docker compose -f docker-compose.test.yaml down
 
 start-keycloak:
 	docker compose up -d keycloak
