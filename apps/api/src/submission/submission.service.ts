@@ -213,6 +213,7 @@ export class SubmissionService {
         .join(', ');
 
       // Select only users who can be deployed anywhere or HA Users without an HA.
+      console.log(anywhereOnly);
       if (anywhereOnly) {
         queryBuilder.andWhere(
           `"submission"."payload"::json -> 'preferencesInformation' ->> 'deployAnywhere' = 'true'`,
@@ -251,6 +252,7 @@ export class SubmissionService {
     }
     // retrieve only registrants whom are not withdrawn
     queryBuilder.andWhere("submission.withdrawn = 'false'");
+    console.log(queryBuilder.getSql());
     return queryBuilder;
   }
 

@@ -188,7 +188,7 @@ interface SpecialtySelectorProps {
   enableDelete: boolean;
 }
 
-const SpecialtySelector: React.FC<SpecialtySelectorProps> = ({
+export const SpecialtySelector: React.FC<SpecialtySelectorProps> = ({
   disabled,
   index,
   specialties,
