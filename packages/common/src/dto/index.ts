@@ -10,3 +10,4 @@ export * from './update-submission.dto';
 export * from './registrant-filter.dto';
 export * from './email-template.dto';
 export * from './unsubscribe-reason.dto';
+export * from './extract-applicants-filter.dto';

@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Brackets, Repository, DataSource, In } from 'typeorm';
+import { Brackets, Repository, DataSource, In, SelectQueryBuilder } from 'typeorm';
 import { SubmissionEntity } from './entity/submission.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -10,6 +10,7 @@ import {
   RegistrantFilterDTO,
   CondensedRegionLocations,
   isMoh,
+  ExtractApplicantsFilterDTO,
 } from '@ehpr/common';
 import { MailService } from 'src/mail/mail.service';
 import { ConfirmationMailable } from 'src/mail/mailables/confirmation.mailable';
@@ -120,9 +121,41 @@ export class SubmissionService {
   }
 
   // query for submissions extract
-  async getSubmissions(haId?: number, userEmail?: string, anywhereOnly?: boolean) {
-    const queryBuilder = await this.getHaFilterQuery(haId, userEmail, false, false, anywhereOnly);
-    return queryBuilder.getMany();
+  async getSubmissions(
+    haId?: number,
+    userEmail?: string,
+    filter?: ExtractApplicantsFilterDTO,
+  ): Promise<SubmissionEntity[]> {
+    const queryBuilder = await this.getHaFilterQuery(haId, userEmail, false, false, filter);
+    let result: SubmissionEntity[] = await queryBuilder.getMany();
+    if (filter?.specialties) {
+      // Find submissions that have specialties that match the filter
+      result = result.filter(submission => {
+        // Set match flag to false.
+        let specialtyMatch = false;
+        filter.specialties.map((specialty: string) => {
+          submission.payload.credentialInformation.specialties.map(submission_specialty => {
+            // If a specialty match is found, see if a subspecialty check is also required.
+            console.log(specialty);
+            if (JSON.parse(specialty)?.id === submission_specialty.id) {
+              if (filter?.subspecialties) {
+                // Attempt to find matching subspecialties.
+                specialtyMatch = !!filter.subspecialties.find((subspecialty: string) => {
+                  !!submission_specialty.subspecialties?.find(
+                    submission_subspecialty =>
+                      JSON.parse(subspecialty)?.id === submission_subspecialty.id,
+                  );
+                });
+              } else {
+                specialtyMatch = true;
+              }
+            }
+          });
+        });
+        return specialtyMatch;
+      });
+    }
+    return result;
   }
 
   // query for registrants table
@@ -197,63 +230,103 @@ export class SubmissionService {
     userEmail?: string,
     isTable?: boolean,
     anyRegion = false,
-    anywhereOnly = false,
+    filter?: ExtractApplicantsFilterDTO,
   ) {
     const queryBuilder = this.dataSource
       .getRepository(SubmissionEntity)
       .createQueryBuilder('submission');
-    const ha = await this.healthAuthoritiesRepository.findOne({ where: { id: haId } });
-    // exclude any filtering for MoH users
-    if (!isMoh(userEmail)) {
-      // submission values are saved using the condensed HA name
-      const haLocations = CondensedRegionLocations[
-        ha?.name as keyof typeof CondensedRegionLocations
-      ]
-        .map(name => `'${name}'`)
-        .join(', ');
 
-      // Select only users who can be deployed anywhere or HA Users without an HA.
-      console.log(anywhereOnly);
-      if (anywhereOnly) {
-        queryBuilder.andWhere(
-          `"submission"."payload"::json -> 'preferencesInformation' ->> 'deployAnywhere' = 'true'`,
-        );
-      } else {
-        // created nested where clauses for filtering by HA locations and registrants who will deploy anywhere
-        queryBuilder.andWhere(
-          // check if a row exists that matches filter
-          // extract jsonb fields into usable data
-          // check if extracted text matches any location values within users HA
-          new Brackets(qb => {
-            qb.where(
-              `EXISTS (
-                  SELECT 1
-                  FROM jsonb_array_elements_text("submission"."payload"->'preferencesInformation'->'deploymentLocations') AS dep
-                  WHERE dep::text = ANY(ARRAY[${haLocations}])
-              )`,
-            );
-
-            // check if querying for registrants table then check if any region filter was selected
-            if (isTable) {
-              if (anyRegion) {
-                qb.orWhere(
-                  "submission.payload->'preferencesInformation'->>'deployAnywhere' = 'true'",
-                );
-              }
-            } else {
-              // for submission extract we send ANY regions back by default
-              qb.orWhere(
-                "submission.payload->'preferencesInformation'->>'deployAnywhere' = 'true'",
-              );
-            }
-          }),
-        );
-      }
+    await this.filterLocations(queryBuilder, haId, userEmail, isTable, anyRegion, filter);
+    if (filter) {
+      await this.filterStream(queryBuilder, filter);
     }
+
     // retrieve only registrants whom are not withdrawn
     queryBuilder.andWhere("submission.withdrawn = 'false'");
     console.log(queryBuilder.getSql());
     return queryBuilder;
+  }
+
+  async filterLocations(
+    queryBuilder: SelectQueryBuilder<SubmissionEntity>,
+    haId?: number,
+    userEmail?: string,
+    isTable?: boolean,
+    anyRegion = false,
+    filter?: ExtractApplicantsFilterDTO,
+  ) {
+    let haLocations: string = '';
+    // exclude any filtering for MoH users
+    if (!isMoh(userEmail)) {
+      const healthAuthority = await this.healthAuthoritiesRepository.findOne({
+        where: { id: haId },
+      });
+      // Get all locations for the Health Authority user
+      haLocations = CondensedRegionLocations[
+        healthAuthority?.name as keyof typeof CondensedRegionLocations
+      ]
+        .map(name => `'${name}'`)
+        .join(', ');
+      console.log(haLocations);
+    } else {
+      // Allow MoH users to access data for users from multiple health authorties.
+      if (!filter?.anywhereOnly) {
+        console.log('anywhereOnly 2 Triggered');
+        // Fetch all
+        let HealthAuthorities: HealthAuthoritiesEntity[] =
+          await this.healthAuthoritiesRepository.find({
+            where: { id: In(filter?.location || []) },
+          });
+        // get a list of all the locations for selected Health Authorities
+        haLocations = HealthAuthorities.map((healthAuthority: HealthAuthoritiesEntity) => {
+          return CondensedRegionLocations[
+            healthAuthority.name as keyof typeof CondensedRegionLocations
+          ]
+            .map(name => `'${name}'`)
+            .join(',');
+        }).join(',');
+      }
+    }
+    // Select only users who can be deployed anywhere or HA Users without an HA.
+    if (filter?.anywhereOnly == 'true') {
+      console.log('anywhereOnly 2 Triggered');
+      queryBuilder.andWhere(
+        `"submission"."payload"::json -> 'preferencesInformation' ->> 'deployAnywhere' = 'true'`,
+      );
+    } else if (haLocations) {
+      // created nested where clauses for filtering by HA locations and registrants who will deploy anywhere
+      queryBuilder.andWhere(
+        // check if a row exists that matches filter
+        // extract jsonb fields into usable data
+        // check if extracted text matches any location values within users HA
+        new Brackets(qb => {
+          qb.where(
+            `EXISTS (
+                  SELECT 1
+                  FROM jsonb_array_elements_text("submission"."payload"->'preferencesInformation'->'deploymentLocations') AS dep
+                  WHERE dep::text = ANY(ARRAY[${haLocations}])
+              )`,
+          );
+          // check if querying for registrants table then check if any region filter was selected
+          if (!isTable || (isTable && anyRegion)) {
+            qb.orWhere("submission.payload->'preferencesInformation'->>'deployAnywhere' = 'true'");
+          }
+        }),
+      );
+    }
+  }
+
+  async filterStream(
+    queryBuilder: SelectQueryBuilder<SubmissionEntity>,
+    filter: ExtractApplicantsFilterDTO,
+  ) {
+    if (filter?.stream) {
+      console.log(filter);
+      const streams = filter.stream.map((stream: string) => `'${JSON.parse(stream).id}'`).join(',');
+      queryBuilder.andWhere(
+        `(submission.payload -> 'credentialInformation' ->> 'stream')::text = ANY(ARRAY[${streams}])`,
+      );
+    }
   }
 
   async truncateTable() {
