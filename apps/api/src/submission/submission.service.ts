@@ -131,7 +131,7 @@ export class SubmissionService {
     if (filter?.specialties) {
       let filteredResult: SubmissionEntity[] = [];
       // Find submissions that have specialties that match the filter
-      result.map(submission => {
+      result = result.filter(submission => {
         // Set match flag to false.
         let specialtyMatch = false;
         filter.specialties.map((specialty: string) => {
@@ -143,8 +143,7 @@ export class SubmissionService {
                 // Attempt to find matching subspecialties.
                 specialtyMatch = !!filter.subspecialties.find((subspecialty: string) => {
                   return submission_specialty.subspecialties?.find(submission_subspecialty => {
-                    const isfound = JSON.parse(subspecialty)?.id === submission_subspecialty.id;
-                    return isfound;
+                    return JSON.parse(subspecialty)?.id === submission_subspecialty.id;
                   });
                 });
               } else {
@@ -153,9 +152,7 @@ export class SubmissionService {
             }
           });
         });
-        if (specialtyMatch) {
-          filteredResult.push(submission);
-        }
+        return specialtyMatch;
       });
       return filteredResult;
     }

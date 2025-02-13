@@ -55,7 +55,6 @@ export class AdminController {
     @Req() { user }: UserRequest,
     @Query() filter: ExtractApplicantsFilterDTO,
   ) {
-    console.log(filter);
     const submissions = await this.submissionService.getSubmissions(
       user?.ha_id,
       user?.email,

@@ -38,10 +38,10 @@ export const ExtractSubmissions = () => {
       link.click();
     }
   };
-  const mapSubSpecialtiesFromStream = (streams: any[]): OptionType[] => {
+  const mapSubSpecialtiesFromStream = (streams: { id: string; name: string }[]): OptionType[] => {
     const subspecialties: OptionType[] = [];
-    streams.forEach(stream => {
-      let s = getSpecialtiesByStreamId(stream.id);
+    streams.forEach((stream: { id: string; name: string }) => {
+      const s = getSpecialtiesByStreamId(stream.id);
       s.forEach(specialty => {
         specialty.subspecialties.forEach(subspecialty => {
           subspecialties.push({
@@ -53,10 +53,10 @@ export const ExtractSubmissions = () => {
     });
     return subspecialties;
   };
-  const mapSpecialtiesFromStream = (streams: any[]): OptionType[] => {
+  const mapSpecialtiesFromStream = (streams: { id: string; name: string }[]): OptionType[] => {
     const specialties: OptionType[] = [];
-    streams.forEach(stream => {
-      let s = getSpecialtiesByStreamId(stream.id);
+    streams.forEach((stream: { id: string; name: string }) => {
+      const s = getSpecialtiesByStreamId(stream.id);
       s.forEach(specialty => {
         specialties.push({
           label: specialty.name,
