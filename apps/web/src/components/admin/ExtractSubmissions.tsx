@@ -1,11 +1,19 @@
 import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileDownload } from '@fortawesome/free-solid-svg-icons';
-import { Button, Checkbox, FieldProps, MultiSelect, OptionType, Field } from '@components';
+import {
+  Button,
+  Checkbox,
+  FieldProps,
+  MultiSelect,
+  OptionType,
+  Field,
+  useAuthContext,
+} from '@components';
 
 import { extractSubmissions } from '@services';
 import { Formik, Form as FormikForm } from 'formik';
-import { getHas, getSpecialtiesByStreamId } from '@ehpr/common';
+import { getHas, getSpecialtiesByStreamId, isMoh } from '@ehpr/common';
 import { streamOptions } from '../submission/validation/credential';
 
 export interface FetchSubmissionsRequest {
@@ -17,8 +25,9 @@ export interface FetchSubmissionsRequest {
 }
 
 export const ExtractSubmissions = () => {
+  const { user: loggedUser } = useAuthContext();
+
   const downloadSubmissions = async (values: FetchSubmissionsRequest) => {
-    console.log(values);
     const data = await extractSubmissions(values);
     if (data) {
       const blob = new Blob([data], { type: 'text/plain' });
@@ -74,7 +83,6 @@ export const ExtractSubmissions = () => {
           location: [],
         }}
         onSubmit={async (values, { setSubmitting }) => {
-          console.log('Submit clicked');
           downloadSubmissions(values);
           setSubmitting(false);
         }}
@@ -144,28 +152,30 @@ export const ExtractSubmissions = () => {
                       />
                     )}
                   </Field>
-                  <Field name='location'>
-                    {({ field, form }: FieldProps) => (
-                      <MultiSelect
-                        label='Health Authority'
-                        id={field.name}
-                        options={(HealthAuthorities || []).map(s => ({
-                          ...s,
-                          isDisabled: false,
-                        }))}
-                        value={field.value}
-                        onChange={value => {
-                          form.setFieldValue(
-                            field.name,
-                            value.map((option: OptionType) => ({
-                              id: option.value,
-                              name: option.label,
-                            })),
-                          );
-                        }}
-                      />
-                    )}
-                  </Field>
+                  {isMoh(loggedUser?.email) && (
+                    <Field name='location'>
+                      {({ field, form }: FieldProps) => (
+                        <MultiSelect
+                          label='Health Authority'
+                          id={field.name}
+                          options={(HealthAuthorities || []).map(s => ({
+                            ...s,
+                            isDisabled: false,
+                          }))}
+                          value={field.value}
+                          onChange={value => {
+                            form.setFieldValue(
+                              field.name,
+                              value.map((option: OptionType) => ({
+                                id: option.value,
+                                name: option.label,
+                              })),
+                            );
+                          }}
+                        />
+                      )}
+                    </Field>
+                  )}
                   <Checkbox
                     label={`Only include applicants who are willing to work anywhere`}
                     name='anywhereOnly'

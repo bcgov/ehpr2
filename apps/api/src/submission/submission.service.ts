@@ -129,22 +129,23 @@ export class SubmissionService {
     const queryBuilder = await this.getHaFilterQuery(haId, userEmail, false, false, filter);
     let result: SubmissionEntity[] = await queryBuilder.getMany();
     if (filter?.specialties) {
+      let filteredResult: SubmissionEntity[] = [];
       // Find submissions that have specialties that match the filter
-      result = result.filter(submission => {
+      result.map(submission => {
         // Set match flag to false.
         let specialtyMatch = false;
         filter.specialties.map((specialty: string) => {
           submission.payload.credentialInformation.specialties.map(submission_specialty => {
             // If a specialty match is found, see if a subspecialty check is also required.
-            console.log(specialty);
             if (JSON.parse(specialty)?.id === submission_specialty.id) {
-              if (filter?.subspecialties) {
+              // Only check if a match has not already been found.
+              if (filter?.subspecialties && !specialtyMatch) {
                 // Attempt to find matching subspecialties.
                 specialtyMatch = !!filter.subspecialties.find((subspecialty: string) => {
-                  !!submission_specialty.subspecialties?.find(
-                    submission_subspecialty =>
-                      JSON.parse(subspecialty)?.id === submission_subspecialty.id,
-                  );
+                  return submission_specialty.subspecialties?.find(submission_subspecialty => {
+                    const isfound = JSON.parse(subspecialty)?.id === submission_subspecialty.id;
+                    return isfound;
+                  });
                 });
               } else {
                 specialtyMatch = true;
@@ -152,8 +153,11 @@ export class SubmissionService {
             }
           });
         });
-        return specialtyMatch;
+        if (specialtyMatch) {
+          filteredResult.push(submission);
+        }
       });
+      return filteredResult;
     }
     return result;
   }
@@ -243,7 +247,6 @@ export class SubmissionService {
 
     // retrieve only registrants whom are not withdrawn
     queryBuilder.andWhere("submission.withdrawn = 'false'");
-    console.log(queryBuilder.getSql());
     return queryBuilder;
   }
 
@@ -267,11 +270,9 @@ export class SubmissionService {
       ]
         .map(name => `'${name}'`)
         .join(', ');
-      console.log(haLocations);
     } else {
       // Allow MoH users to access data for users from multiple health authorties.
       if (!filter?.anywhereOnly) {
-        console.log('anywhereOnly 2 Triggered');
         // Fetch all
         let HealthAuthorities: HealthAuthoritiesEntity[] =
           await this.healthAuthoritiesRepository.find({
@@ -289,7 +290,6 @@ export class SubmissionService {
     }
     // Select only users who can be deployed anywhere or HA Users without an HA.
     if (filter?.anywhereOnly == 'true') {
-      console.log('anywhereOnly 2 Triggered');
       queryBuilder.andWhere(
         `"submission"."payload"::json -> 'preferencesInformation' ->> 'deployAnywhere' = 'true'`,
       );
@@ -321,7 +321,6 @@ export class SubmissionService {
     filter: ExtractApplicantsFilterDTO,
   ) {
     if (filter?.stream) {
-      console.log(filter);
       const streams = filter.stream.map((stream: string) => `'${JSON.parse(stream).id}'`).join(',');
       queryBuilder.andWhere(
         `(submission.payload -> 'credentialInformation' ->> 'stream')::text = ANY(ARRAY[${streams}])`,
