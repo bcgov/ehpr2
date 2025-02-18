@@ -11,6 +11,7 @@ import {
   CondensedRegionLocations,
   isMoh,
   ExtractApplicantsFilterDTO,
+  SpecialtyDTO,
 } from '@ehpr/common';
 import { MailService } from 'src/mail/mail.service';
 import { ConfirmationMailable } from 'src/mail/mailables/confirmation.mailable';
@@ -131,32 +132,47 @@ export class SubmissionService {
     if (filter?.specialties) {
       let filteredResult: SubmissionEntity[] = [];
       // Find submissions that have specialties that match the filter
-      result = result.filter(submission => {
-        // Set match flag to false.
-        let specialtyMatch = false;
-        filter.specialties.map((specialty: string) => {
-          submission.payload.credentialInformation.specialties.map(submission_specialty => {
-            // If a specialty match is found, see if a subspecialty check is also required.
-            if (JSON.parse(specialty)?.id === submission_specialty.id) {
-              // Only check if a match has not already been found.
-              if (filter?.subspecialties && !specialtyMatch) {
-                // Attempt to find matching subspecialties.
-                specialtyMatch = !!filter.subspecialties.find((subspecialty: string) => {
-                  return submission_specialty.subspecialties?.find(submission_subspecialty => {
-                    return JSON.parse(subspecialty)?.id === submission_subspecialty.id;
-                  });
-                });
-              } else {
-                specialtyMatch = true;
-              }
-            }
-          });
-        });
-        return specialtyMatch;
+      filteredResult = result.filter(submission => {
+        return this.findMatchingSpecialty(submission, filter);
       });
       return filteredResult;
     }
     return result;
+  }
+  // Returns true if a matching specialty is found.
+  findMatchingSpecialty(submission: SubmissionEntity, filter: ExtractApplicantsFilterDTO): boolean {
+    let matchFound = false;
+    filter.specialties.map((specialty: string) => {
+      submission?.payload?.credentialInformation?.specialties.forEach(
+        (submission_specialty: SpecialtyDTO) => {
+          if (matchFound) {
+            return;
+          }
+          // If a specialty match is found, see if a subspecialty check is also required.
+          if (JSON.parse(specialty)?.id === submission_specialty.id) {
+            // A match is found if either there are no subspecialties in the filter
+            // or
+            // if there are subspecialties in the filter, and a matching subspecialty is found.
+            if (
+              !filter.subspecialties ||
+              (filter?.subspecialties &&
+                this.findMatchingSubSpecialty(submission_specialty, filter))
+            ) {
+              matchFound = true;
+            }
+          }
+        },
+      );
+    });
+    return matchFound;
+  }
+  // Returns true if a matching suspecialty is found within the specialty
+  findMatchingSubSpecialty(specialty: SpecialtyDTO, filter: ExtractApplicantsFilterDTO): boolean {
+    return !!filter.subspecialties.find((subspecialty: string) => {
+      return specialty.subspecialties?.find(submission_subspecialty => {
+        return JSON.parse(subspecialty)?.id === submission_subspecialty.id;
+      });
+    });
   }
 
   // query for registrants table
