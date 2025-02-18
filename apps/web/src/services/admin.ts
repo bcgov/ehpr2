@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { InviteUserDTO, User } from '@ehpr/common';
+import { FetchSubmissionsRequest } from '@components';
 
 export const inviteUser = async (payload: InviteUserDTO) => {
   const { data } = await axios.post<{ data: User }>('/admin/invite', payload);
@@ -16,9 +17,9 @@ export const revokeUser = async (id: string) => {
   return data?.data as User;
 };
 
-export const extractSubmissions = async (anywhereOnly?: boolean) => {
-  const response = await axios.get<{ data: string }>(
-    `/admin/extract-submissions?anywhereOnly=${anywhereOnly}`,
-  );
+export const extractSubmissions = async (values?: FetchSubmissionsRequest) => {
+  const response = await axios.get<{ data: string }>(`/admin/extract-submissions`, {
+    params: values,
+  });
   return response?.data?.data;
 };

@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Inject,
@@ -9,10 +10,11 @@ import {
   Query,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import * as csvWriter from 'csv-writer';
-import { InviteUserDTO, Role, UserRequest } from '@ehpr/common';
+import { InviteUserDTO, Role, UserRequest, ExtractApplicantsFilterDTO } from '@ehpr/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { UserService } from '../user/user.service';
 import { Roles } from '../common/decorators';
@@ -45,15 +47,18 @@ export class AdminController {
     return this.userService.revoke(id);
   }
 
+  @UseGuards(AuthGuard)
+  @Roles(Role.Admin, Role.User)
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('/extract-submissions')
   async extractSubmissions(
     @Req() { user }: UserRequest,
-    @Query('anywhereOnly') anywhereOnly: boolean,
+    @Query() filter: ExtractApplicantsFilterDTO,
   ) {
     const submissions = await this.submissionService.getSubmissions(
       user?.ha_id,
       user?.email,
-      anywhereOnly,
+      filter,
     );
 
     const flatSubmissions = flattenAndTransformFormData(submissions);

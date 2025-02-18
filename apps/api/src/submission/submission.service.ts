@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Brackets, Repository, DataSource, In } from 'typeorm';
+import { Brackets, Repository, DataSource, In, SelectQueryBuilder } from 'typeorm';
 import { SubmissionEntity } from './entity/submission.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -10,6 +10,8 @@ import {
   RegistrantFilterDTO,
   CondensedRegionLocations,
   isMoh,
+  ExtractApplicantsFilterDTO,
+  SpecialtyDTO,
 } from '@ehpr/common';
 import { MailService } from 'src/mail/mail.service';
 import { ConfirmationMailable } from 'src/mail/mailables/confirmation.mailable';
@@ -120,9 +122,57 @@ export class SubmissionService {
   }
 
   // query for submissions extract
-  async getSubmissions(haId?: number, userEmail?: string, anywhereOnly?: boolean) {
-    const queryBuilder = await this.getHaFilterQuery(haId, userEmail, false, false, anywhereOnly);
-    return queryBuilder.getMany();
+  async getSubmissions(
+    haId?: number,
+    userEmail?: string,
+    filter?: ExtractApplicantsFilterDTO,
+  ): Promise<SubmissionEntity[]> {
+    const queryBuilder = await this.getHaFilterQuery(haId, userEmail, false, false, filter);
+    let result: SubmissionEntity[] = await queryBuilder.getMany();
+    if (filter?.specialties) {
+      let filteredResult: SubmissionEntity[] = [];
+      // Find submissions that have specialties that match the filter
+      filteredResult = result.filter(submission => {
+        return this.findMatchingSpecialty(submission, filter);
+      });
+      return filteredResult;
+    }
+    return result;
+  }
+  // Returns true if a matching specialty is found.
+  findMatchingSpecialty(submission: SubmissionEntity, filter: ExtractApplicantsFilterDTO): boolean {
+    let matchFound = false;
+    filter.specialties.map((specialty: string) => {
+      submission?.payload?.credentialInformation?.specialties.forEach(
+        (submission_specialty: SpecialtyDTO) => {
+          if (matchFound) {
+            return;
+          }
+          // If a specialty match is found, see if a subspecialty check is also required.
+          if (JSON.parse(specialty)?.id === submission_specialty.id) {
+            // A match is found if either there are no subspecialties in the filter
+            // or
+            // if there are subspecialties in the filter, and a matching subspecialty is found.
+            if (
+              !filter.subspecialties ||
+              (filter?.subspecialties &&
+                this.findMatchingSubSpecialty(submission_specialty, filter))
+            ) {
+              matchFound = true;
+            }
+          }
+        },
+      );
+    });
+    return matchFound;
+  }
+  // Returns true if a matching suspecialty is found within the specialty
+  findMatchingSubSpecialty(specialty: SpecialtyDTO, filter: ExtractApplicantsFilterDTO): boolean {
+    return !!filter.subspecialties.find((subspecialty: string) => {
+      return specialty.subspecialties?.find(submission_subspecialty => {
+        return JSON.parse(subspecialty)?.id === submission_subspecialty.id;
+      });
+    });
   }
 
   // query for registrants table
@@ -197,61 +247,98 @@ export class SubmissionService {
     userEmail?: string,
     isTable?: boolean,
     anyRegion = false,
-    anywhereOnly = false,
+    filter?: ExtractApplicantsFilterDTO,
   ) {
     const queryBuilder = this.dataSource
       .getRepository(SubmissionEntity)
       .createQueryBuilder('submission');
-    const ha = await this.healthAuthoritiesRepository.findOne({ where: { id: haId } });
+
+    await this.filterLocations(queryBuilder, haId, userEmail, isTable, anyRegion, filter);
+    if (filter) {
+      await this.filterStream(queryBuilder, filter);
+    }
+
+    // retrieve only registrants whom are not withdrawn
+    queryBuilder.andWhere("submission.withdrawn = 'false'");
+    return queryBuilder;
+  }
+
+  async filterLocations(
+    queryBuilder: SelectQueryBuilder<SubmissionEntity>,
+    haId?: number,
+    userEmail?: string,
+    isTable?: boolean,
+    anyRegion = false,
+    filter?: ExtractApplicantsFilterDTO,
+  ) {
+    let haLocations: string = '';
     // exclude any filtering for MoH users
     if (!isMoh(userEmail)) {
-      // submission values are saved using the condensed HA name
-      const haLocations = CondensedRegionLocations[
-        ha?.name as keyof typeof CondensedRegionLocations
+      const healthAuthority = await this.healthAuthoritiesRepository.findOne({
+        where: { id: haId },
+      });
+      // Get all locations for the Health Authority user
+      haLocations = CondensedRegionLocations[
+        healthAuthority?.name as keyof typeof CondensedRegionLocations
       ]
         .map(name => `'${name}'`)
         .join(', ');
-
-      // Select only users who can be deployed anywhere or HA Users without an HA.
-      if (anywhereOnly) {
-        queryBuilder.andWhere(
-          `"submission"."payload"::json -> 'preferencesInformation' ->> 'deployAnywhere' = 'true'`,
-        );
-      } else {
-        // created nested where clauses for filtering by HA locations and registrants who will deploy anywhere
-        queryBuilder.andWhere(
-          // check if a row exists that matches filter
-          // extract jsonb fields into usable data
-          // check if extracted text matches any location values within users HA
-          new Brackets(qb => {
-            qb.where(
-              `EXISTS (
+    } else {
+      // Allow MoH users to access data for users from multiple health authorties.
+      if (!filter?.anywhereOnly) {
+        // Fetch all
+        let HealthAuthorities: HealthAuthoritiesEntity[] =
+          await this.healthAuthoritiesRepository.find({
+            where: { id: In(filter?.location || []) },
+          });
+        // get a list of all the locations for selected Health Authorities
+        haLocations = HealthAuthorities.map((healthAuthority: HealthAuthoritiesEntity) => {
+          return CondensedRegionLocations[
+            healthAuthority.name as keyof typeof CondensedRegionLocations
+          ]
+            .map(name => `'${name}'`)
+            .join(',');
+        }).join(',');
+      }
+    }
+    // Select only users who can be deployed anywhere or HA Users without an HA.
+    if (filter?.anywhereOnly == 'true') {
+      queryBuilder.andWhere(
+        `"submission"."payload"::json -> 'preferencesInformation' ->> 'deployAnywhere' = 'true'`,
+      );
+    } else if (haLocations) {
+      // created nested where clauses for filtering by HA locations and registrants who will deploy anywhere
+      queryBuilder.andWhere(
+        // check if a row exists that matches filter
+        // extract jsonb fields into usable data
+        // check if extracted text matches any location values within users HA
+        new Brackets(qb => {
+          qb.where(
+            `EXISTS (
                   SELECT 1
                   FROM jsonb_array_elements_text("submission"."payload"->'preferencesInformation'->'deploymentLocations') AS dep
                   WHERE dep::text = ANY(ARRAY[${haLocations}])
               )`,
-            );
-
-            // check if querying for registrants table then check if any region filter was selected
-            if (isTable) {
-              if (anyRegion) {
-                qb.orWhere(
-                  "submission.payload->'preferencesInformation'->>'deployAnywhere' = 'true'",
-                );
-              }
-            } else {
-              // for submission extract we send ANY regions back by default
-              qb.orWhere(
-                "submission.payload->'preferencesInformation'->>'deployAnywhere' = 'true'",
-              );
-            }
-          }),
-        );
-      }
+          );
+          // check if querying for registrants table then check if any region filter was selected
+          if (!isTable || (isTable && anyRegion)) {
+            qb.orWhere("submission.payload->'preferencesInformation'->>'deployAnywhere' = 'true'");
+          }
+        }),
+      );
     }
-    // retrieve only registrants whom are not withdrawn
-    queryBuilder.andWhere("submission.withdrawn = 'false'");
-    return queryBuilder;
+  }
+
+  async filterStream(
+    queryBuilder: SelectQueryBuilder<SubmissionEntity>,
+    filter: ExtractApplicantsFilterDTO,
+  ) {
+    if (filter?.stream) {
+      const streams = filter.stream.map((stream: string) => `'${JSON.parse(stream).id}'`).join(',');
+      queryBuilder.andWhere(
+        `(submission.payload -> 'credentialInformation' ->> 'stream')::text = ANY(ARRAY[${streams}])`,
+      );
+    }
   }
 
   async truncateTable() {

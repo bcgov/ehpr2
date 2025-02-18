@@ -66,7 +66,7 @@ export const MultiItemListbox = ({
   menuPlacement,
   handlePreviousSelect,
 }: MultiItemListboxProps) => {
-  const commonStyles = listboxStyles(isDisabled, options.length, selected.length);
+  const commonStyles = listboxStyles(isDisabled, options.length, selected?.length || 0);
 
   const handleOptionRemove = (option: OptionType, event: React.MouseEvent<SVGSVGElement>) => {
     event.stopPropagation();
