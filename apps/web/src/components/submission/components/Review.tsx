@@ -14,6 +14,7 @@ import {
   SpecialtyDTO,
   Lha,
   rebuildHaStructure,
+  isRelatedToIndigenous,
 } from '@ehpr/common';
 
 import { useFormikContext } from 'formik';
@@ -64,6 +65,9 @@ export const Review: React.FC = () => {
     hasPreviousDeployment,
     lastDeployedHa,
     lastDeploymentDate,
+    hasExperienceWithIndigenousCommunity,
+    hasExperienceWithRemoteRuralCommunity,
+    completedSanyasIndigenousCulturalSafetyTraining,
   } = preferencesInformation;
 
   if (!stream) {
@@ -174,6 +178,22 @@ export const Review: React.FC = () => {
             label='Have you previously been deployed from the EHPR?'
             value={getOptionLabelByValue(previousDeploymentOptions, hasPreviousDeployment)}
           />
+          {isRelatedToIndigenous(values.preferencesInformation) && (
+            <>
+              <ReviewItem
+                label='Do you have experience working with Indigenous communities?'
+                value={booleanToYesNo(hasExperienceWithIndigenousCommunity)}
+              />
+              <ReviewItem
+                label='Do you have experience working in rural/remote communities?'
+                value={booleanToYesNo(hasExperienceWithRemoteRuralCommunity)}
+              />
+              <ReviewItem
+                label="Have you completed the San'yas Indigenous Cultural Safety Training?"
+                value={booleanToYesNo(completedSanyasIndigenousCulturalSafetyTraining)}
+              />
+            </>
+          )}
           {hasPreviousDeployment === 'yes' && (
             <>
               <ReviewItem label='Date of Last Deployment' value={lastDeploymentDate} />

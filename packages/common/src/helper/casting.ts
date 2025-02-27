@@ -1,3 +1,3 @@
-export const booleanToYesNo = (bool: boolean) => {
+export const booleanToYesNo = (bool?: boolean) => {
   return bool ? 'Yes' : 'No';
 };
