@@ -9,7 +9,7 @@ import {
   Field,
   BasicSelect,
 } from '@components';
-import { getLhasbyHaId, HaId } from '@ehpr/common';
+import { getLhasbyHaId, HaId, isRelatedToIndigenous } from '@ehpr/common';
 import { FieldProps, useFormikContext } from 'formik';
 import { useEffect, useRef } from 'react';
 import { FormStepProps } from '.';
@@ -93,6 +93,22 @@ export const Preferences: React.FC<FormStepProps> = () => {
         legend='Have you previously been deployed from the EHPR?'
         options={previousDeploymentOptions}
       />
+      {isRelatedToIndigenous(values.preferencesInformation) && (
+        <>
+          <Radio.Boolean
+            name='preferencesInformation.hasExperienceWithIndigenousCommunity'
+            legend='Do you have experience working with Indigenous communities?'
+          />
+          <Radio.Boolean
+            name='preferencesInformation.hasExperienceWithRemoteRuralCommunity'
+            legend='Do you have experience working in rural/remote communities?'
+          />
+          <Radio.Boolean
+            name='preferencesInformation.completedSanyasIndigenousCulturalSafetyTraining'
+            legend="Have you completed the San'yas Indigenous Cultural Safety Training?"
+          />
+        </>
+      )}
       {values.preferencesInformation.hasPreviousDeployment === 'yes' && (
         <>
           <div className='flex flex-row'>

@@ -58,6 +58,8 @@ export const prefilledSubmissionValues: SubmissionType = {
     primaryPhone: '1234567890',
     primaryPhoneExt: 'dial 2 at the menu',
     email: 'johndoe@test.test',
+    secondaryPhone: '',
+    secondaryPhoneExt: '',
   },
   credentialInformation: {
     stream: getStreamById('Physician').id,
@@ -86,6 +88,9 @@ export const prefilledSubmissionValues: SubmissionType = {
     lastDeploymentDate: '',
     deploymentDuration: DeploymentDurations.EIGHT_PLUS,
     deploymentType: [DeploymentTypes.FULL_TIME],
+    hasExperienceWithIndigenousCommunity: false,
+    hasExperienceWithRemoteRuralCommunity: false,
+    completedSanyasIndigenousCulturalSafetyTraining: false,
   },
   confirm: true,
   captcha: false,

@@ -17,7 +17,7 @@ import {
   PreviousDeploymentOptions,
 } from '../interfaces';
 
-import { LhaId, validLhaIds } from '../helper';
+import { isRelatedToIndigenous, LhaId, validLhaIds } from '../helper';
 import { IsArrayOfLhas, ValidateArray } from '../validators';
 
 export class PreferencesInformationDTO {
@@ -32,6 +32,10 @@ export class PreferencesInformationDTO {
       this.hasPreviousDeployment = base.hasPreviousDeployment;
       this.lastDeployedHa = base.lastDeployedHa;
       this.lastDeploymentDate = base.lastDeploymentDate;
+      this.hasExperienceWithIndigenousCommunity = base.hasExperienceWithIndigenousCommunity;
+      this.hasExperienceWithRemoteRuralCommunity = base.hasExperienceWithRemoteRuralCommunity;
+      this.completedSanyasIndigenousCulturalSafetyTraining =
+        base.completedSanyasIndigenousCulturalSafetyTraining;
     }
   }
 
@@ -85,4 +89,19 @@ export class PreferencesInformationDTO {
   @IsString({ message: 'Date of last deployment is required' })
   @IsNotEmpty({ message: 'Date of last deployment is required' })
   lastDeploymentDate!: string;
+
+  @ValidateIf(isRelatedToIndigenous)
+  @IsBoolean()
+  @IsNotEmpty({ message: 'This field is required' })
+  hasExperienceWithIndigenousCommunity?: boolean;
+
+  @ValidateIf(isRelatedToIndigenous)
+  @IsBoolean()
+  @IsNotEmpty({ message: 'This field is required' })
+  hasExperienceWithRemoteRuralCommunity?: boolean;
+
+  @ValidateIf(isRelatedToIndigenous)
+  @IsBoolean()
+  @IsNotEmpty({ message: 'This field is required' })
+  completedSanyasIndigenousCulturalSafetyTraining?: boolean;
 }

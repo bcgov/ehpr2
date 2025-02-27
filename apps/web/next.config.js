@@ -39,6 +39,7 @@ module.exports = {
               frameSrc: ["'self'", 'http://localhost:8080'],
               formAction: "'self'",
               frameAncestors: ["'self'"],
+              workerSrc: ["'self'", 'blob:'],
             },
           },
           frameGuard: 'deny',
