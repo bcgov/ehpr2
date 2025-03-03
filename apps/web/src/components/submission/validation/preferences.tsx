@@ -20,6 +20,9 @@ export const preferencesDefaultValues: Partial<PreferencesInformationDTO> = {
   hasPreviousDeployment: undefined,
   lastDeployedHa: undefined,
   lastDeploymentDate: undefined,
+  hasExperienceWithIndigenousCommunity: undefined,
+  hasExperienceWithRemoteRuralCommunity: undefined,
+  completedSanyasIndigenousCulturalSafetyTraining: undefined,
 };
 
 export const haOptions = getHas().map(({ id, name }) => ({
