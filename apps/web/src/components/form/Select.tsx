@@ -55,7 +55,9 @@ export const MultiSelect = (props: MultiSelectProps) => {
     if (!Array.isArray(value)) {
       return value;
     }
-    return value.map(item => ({ value: item.id, label: item.name }));
+    return value
+      .filter(v => options.some(o => o.value === v.id))
+      .map(item => ({ value: item.id, label: item.name }));
   };
 
   return (

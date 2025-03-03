@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { createNestApp } from './app.config';
 
 async function bootstrap() {
@@ -11,6 +12,12 @@ async function bootstrap() {
           credentials: true,
         }
       : {},
+  );
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
   );
   await app.init();
   await app.listen(process.env.APP_PORT || 4000);

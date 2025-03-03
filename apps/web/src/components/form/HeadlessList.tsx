@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Listbox, Field, Label, Description } from '@headlessui/react';
 
 import { OptionType } from '@components';
@@ -50,6 +50,10 @@ export const HeadlessList = <T,>({
       return remainingOptions;
     });
   };
+
+  useEffect(() => {
+    setSelected(value);
+  }, [value]);
 
   return (
     <Field>

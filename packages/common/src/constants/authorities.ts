@@ -1,6 +1,7 @@
 export interface Authority {
   condensedName: string;
   name: string;
+  region?: string;
   domains: string[];
 }
 
@@ -24,6 +25,7 @@ export const Authorities: Record<string, Authority> = {
     condensedName: 'FNHA',
     name: 'First Nations Health Authority',
     domains: ['fnha.ca'],
+    region: 'First Nations Health Authority',
   },
   PHC: {
     condensedName: 'providence',
@@ -34,31 +36,37 @@ export const Authorities: Record<string, Authority> = {
     condensedName: 'provincialHsa',
     name: 'Provincial Health Services Authority',
     domains: ['phsa.ca'],
+    region: '',
   },
   FHA: {
     condensedName: 'fraser',
     name: AuthoritiesFull.FRASER_HEALTH_AUTHORITY,
     domains: ['fraserhealth.ca'],
+    region: 'Fraser Region',
   },
   IHA: {
     condensedName: 'interior',
     name: AuthoritiesFull.INTERIOR_HEALTH_AUTHORITY,
     domains: ['interiorhealth.ca'],
+    region: 'Interior Region',
   },
   VIHA: {
     condensedName: 'vancouverIsland',
     name: AuthoritiesFull.VANCOUVER_ISLAND_HEALTH_AUTHORITY,
     domains: ['islandhealth.ca'],
+    region: 'Vancouver Island Region',
   },
   NHA: {
     condensedName: 'northern',
     name: AuthoritiesFull.NORTHERN_HEALTH_AUTHORITY,
     domains: ['northernhealth.ca'],
+    region: 'Northern Region',
   },
   VCHA: {
     condensedName: 'vancouverCoastal',
     name: AuthoritiesFull.VANCOUVER_COASTAL_HEALTH_AUTHORITY,
     domains: ['vch.ca'],
+    region: 'Vancouver Coastal Region',
   },
 };
 
