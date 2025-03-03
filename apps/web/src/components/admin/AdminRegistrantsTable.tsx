@@ -326,7 +326,7 @@ export const AdminRegistrantsTable = () => {
                     {mapEnumData(reg.specialty, Specialty)}
                   </th>
                   <th className='px-6' scope='col'>
-                    {!reg.deploymentLocations.length
+                    {!reg.deploymentLocations?.length
                       ? 'Any'
                       : mapEnumData(reg.deploymentLocations, Location)}
                   </th>

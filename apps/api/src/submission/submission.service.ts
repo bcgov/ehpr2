@@ -128,7 +128,21 @@ export class SubmissionService {
     filter?: ExtractApplicantsFilterDTO,
   ): Promise<SubmissionEntity[]> {
     const queryBuilder = await this.getHaFilterQuery(haId, userEmail, false, false, filter);
-    let result: SubmissionEntity[] = await queryBuilder.getMany();
+
+    if (filter?.currentEmployment) {
+      queryBuilder.andWhere(
+        `submission.payload->'credentialInformation'->>'currentEmployment' = ANY(ARRAY[:...currentEmployment])`,
+        {
+          currentEmployment: filter.currentEmployment,
+        },
+      );
+    }
+    if (filter?.registeredOnly) {
+      queryBuilder.andWhere(
+        "submission.payload->'credentialInformation'->>'registrationStatus' = 'registered'",
+      );
+    }
+    const result: SubmissionEntity[] = await queryBuilder.getMany();
     if (filter?.specialties) {
       let filteredResult: SubmissionEntity[] = [];
       // Find submissions that have specialties that match the filter
@@ -142,14 +156,14 @@ export class SubmissionService {
   // Returns true if a matching specialty is found.
   findMatchingSpecialty(submission: SubmissionEntity, filter: ExtractApplicantsFilterDTO): boolean {
     let matchFound = false;
-    filter.specialties.map((specialty: string) => {
+    filter.specialties?.map((specialty: string) => {
       submission?.payload?.credentialInformation?.specialties.forEach(
         (submission_specialty: SpecialtyDTO) => {
           if (matchFound) {
             return;
           }
           // If a specialty match is found, see if a subspecialty check is also required.
-          if (JSON.parse(specialty)?.id === submission_specialty.id) {
+          if (specialty === submission_specialty.id) {
             // A match is found if either there are no subspecialties in the filter
             // or
             // if there are subspecialties in the filter, and a matching subspecialty is found.
@@ -168,9 +182,9 @@ export class SubmissionService {
   }
   // Returns true if a matching suspecialty is found within the specialty
   findMatchingSubSpecialty(specialty: SpecialtyDTO, filter: ExtractApplicantsFilterDTO): boolean {
-    return !!filter.subspecialties.find((subspecialty: string) => {
+    return !!filter.subspecialties?.find((subspecialty: string) => {
       return specialty.subspecialties?.find(submission_subspecialty => {
-        return JSON.parse(subspecialty)?.id === submission_subspecialty.id;
+        return subspecialty === submission_subspecialty.id;
       });
     });
   }
@@ -271,42 +285,40 @@ export class SubmissionService {
     anyRegion = false,
     filter?: ExtractApplicantsFilterDTO,
   ) {
-    let haLocations: string = '';
-    // exclude any filtering for MoH users
-    if (!isMoh(userEmail)) {
+    if (filter?.anywhereOnly) {
+      queryBuilder.andWhere(
+        `"submission"."payload"::json -> 'preferencesInformation' ->> 'deployAnywhere' = 'true'`,
+      );
+      return;
+    }
+
+    let haLocations = filter?.locations;
+
+    if (isMoh(userEmail)) {
+      if (filter?.authorities) {
+        const HealthAuthorities: HealthAuthoritiesEntity[] =
+          await this.healthAuthoritiesRepository.find({
+            where: { name: In(filter.authorities) },
+          });
+        // get a list of all the locations for selected Health Authorities
+        haLocations = HealthAuthorities.map((healthAuthority: HealthAuthoritiesEntity) => {
+          return CondensedRegionLocations[
+            healthAuthority.name as keyof typeof CondensedRegionLocations
+          ].filter(loc => !haLocations?.length || haLocations.includes(loc));
+        }).flat();
+      }
+    } else {
       const healthAuthority = await this.healthAuthoritiesRepository.findOne({
         where: { id: haId },
       });
       // Get all locations for the Health Authority user
       haLocations = CondensedRegionLocations[
         healthAuthority?.name as keyof typeof CondensedRegionLocations
-      ]
-        .map(name => `'${name}'`)
-        .join(', ');
-    } else {
-      // Allow MoH users to access data for users from multiple health authorties.
-      if (!filter?.anywhereOnly) {
-        // Fetch all
-        let HealthAuthorities: HealthAuthoritiesEntity[] =
-          await this.healthAuthoritiesRepository.find({
-            where: { id: In(filter?.location || []) },
-          });
-        // get a list of all the locations for selected Health Authorities
-        haLocations = HealthAuthorities.map((healthAuthority: HealthAuthoritiesEntity) => {
-          return CondensedRegionLocations[
-            healthAuthority.name as keyof typeof CondensedRegionLocations
-          ]
-            .map(name => `'${name}'`)
-            .join(',');
-        }).join(',');
-      }
+      ].filter(loc => !haLocations?.length || haLocations.includes(loc));
     }
+
     // Select only users who can be deployed anywhere or HA Users without an HA.
-    if (filter?.anywhereOnly == 'true') {
-      queryBuilder.andWhere(
-        `"submission"."payload"::json -> 'preferencesInformation' ->> 'deployAnywhere' = 'true'`,
-      );
-    } else if (haLocations) {
+    if (haLocations) {
       // created nested where clauses for filtering by HA locations and registrants who will deploy anywhere
       queryBuilder.andWhere(
         // check if a row exists that matches filter
@@ -317,8 +329,9 @@ export class SubmissionService {
             `EXISTS (
                   SELECT 1
                   FROM jsonb_array_elements_text("submission"."payload"->'preferencesInformation'->'deploymentLocations') AS dep
-                  WHERE dep::text = ANY(ARRAY[${haLocations}])
+                  WHERE dep::text = ANY(ARRAY[:...haLocations])
               )`,
+            { haLocations },
           );
           // check if querying for registrants table then check if any region filter was selected
           if (!isTable || (isTable && anyRegion)) {
@@ -334,9 +347,9 @@ export class SubmissionService {
     filter: ExtractApplicantsFilterDTO,
   ) {
     if (filter?.stream) {
-      const streams = filter.stream.map((stream: string) => `'${JSON.parse(stream).id}'`).join(',');
       queryBuilder.andWhere(
-        `(submission.payload -> 'credentialInformation' ->> 'stream')::text = ANY(ARRAY[${streams}])`,
+        `(submission.payload -> 'credentialInformation' ->> 'stream')::text = ANY(ARRAY[:...stream])`,
+        { stream: filter.stream },
       );
     }
   }

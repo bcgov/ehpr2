@@ -13,7 +13,7 @@
     "check": "run-p 'lint' 'format:check'",
     "prepare": "husky install",
     "precommit": "run-p 'format:staged'",
-    "watch:common": "wsrun --stages --exclude-missing watch",
+    "watch:common": "yarn workspace @ehpr/common watch",
     "watch:api": "yarn workspace @ehpr/api start:dev:local",
     "watch:web": "yarn workspace @ehpr/web dev",
     "watch": "run-p 'watch:common' 'watch:api' 'watch:web'",

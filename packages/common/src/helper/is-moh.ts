@@ -1,12 +1,4 @@
 import { Authorities } from '../constants';
+import { getAuthorityByEmail } from './get-authority-by-email';
 
-export const isMoh = (email?: string) => {
-  if (!email) {
-    return false;
-  }
-
-  const domain = email.split('@')[1];
-  const isMohDomain = Authorities.MOH.domains.includes(domain);
-
-  return isMohDomain;
-};
+export const isMoh = (email?: string) => getAuthorityByEmail(email) === Authorities.MOH;
