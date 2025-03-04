@@ -16,6 +16,7 @@ import {
   RegistrantFilterDTO,
   RegistrantRO,
   UnsubscribeReasonDTO,
+  User,
 } from '@ehpr/common';
 import { ProcessTemplate, SubmissionMap } from './types/template';
 import { SubmissionService } from 'src/submission/submission.service';
@@ -75,7 +76,7 @@ export class RegistrantService {
     return [registrants, count];
   }
 
-  async sendMassEmail(payload: EmailTemplateDTO) {
+  async sendMassEmail(payload: EmailTemplateDTO, user: User) {
     // rate limit requests to handle AWS SES req/ second limits (currently 40/s)
     // 35 available tokens for each window of 1 second
     const limiter = new RateLimiter({ tokensPerInterval: 35, interval: 1000 });
@@ -109,7 +110,7 @@ export class RegistrantService {
             });
           }
 
-          body = getBodyWithFooter(body, token, domain);
+          body = getBodyWithFooter(body, payload.isTest ? '' : token, domain);
           // don't show unsubscribe link for test emails
           const mailOptions: MailOptions = {
             body,
@@ -122,7 +123,7 @@ export class RegistrantService {
           await this.mailService.sendMailWithSES(mailOptions);
         });
       // check for errors from test email
-      if (!payload.userId && errorsArray.length > 0) {
+      if (payload.isTest && errorsArray.length > 0) {
         throw new InternalServerErrorException('There was an issue trying to send the test email');
       }
     } catch (e) {
@@ -131,16 +132,10 @@ export class RegistrantService {
     }
 
     // don't make record for test emails
-    // no user id for test email
-    // create a record entry regardless if errored out
-    if (payload.userId) {
+    if (!payload.isTest) {
       const emailIds = payload.data.map(({ id }) => id);
       // format data for record entry
-      const record = this.massEmailRecordService.mapRecordObject(
-        payload.userId,
-        emailIds,
-        errorsArray,
-      );
+      const record = this.massEmailRecordService.mapRecordObject(user.id, emailIds, errorsArray);
 
       await this.massEmailRecordService.createMassEmailRecord(record);
     }

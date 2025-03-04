@@ -1,39 +1,40 @@
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsEmail,
+  IsArray,
+  IsBoolean,
+  IsOptional,
+  ValidateNested,
+} from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 
 export class RegistrantDataDTO {
-  constructor(base?: RegistrantDataDTO) {
-    if (base) {
-      this.id = base.id;
-      this.email = base.email;
-    }
-  }
   @IsString()
+  @IsNotEmpty()
   id!: string;
 
-  @IsString()
+  @IsEmail()
+  @IsNotEmpty()
   email!: string;
 }
 
 export class EmailTemplateDTO {
-  constructor(base?: EmailTemplateDTO) {
-    if (base) {
-      this.userId = base.userId;
-      this.subject = base.subject;
-      this.body = base.body;
-      this.data = base.data;
-    }
-  }
-
-  @IsOptional()
   @IsString()
-  userId?: string;
-
-  @IsString()
+  @IsNotEmpty()
   subject!: string;
 
   @IsString()
+  @IsNotEmpty()
   body!: string;
 
   @IsArray()
+  @Type(() => RegistrantDataDTO)
+  @ValidateNested({ each: true })
   data!: RegistrantDataDTO[];
+
+  @Transform(o => o.value === true || o.value === 'true')
+  @IsBoolean()
+  @IsOptional()
+  isTest?: boolean;
 }
