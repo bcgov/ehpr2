@@ -25,7 +25,7 @@ import { MailOptions } from '../mail/types/mail-options';
 import { MassEmailRecordService } from 'src/mass-email-record/mass-email-record.service';
 import { AppLogger } from 'src/common/logger.service';
 import { SubmissionEntity } from 'src/submission/entity/submission.entity';
-import { emailBodyWithUnsubscribeLink, updateSubmissionLink } from 'src/mail/mail.util';
+import { getBodyWithFooter, updateSubmissionLink } from 'src/mail/mail.util';
 
 @Injectable()
 export class RegistrantService {
@@ -98,31 +98,25 @@ export class RegistrantService {
           const domain = process.env.DOMAIN;
           const token = this.jwtService.sign({ email: item.email, id: item.id });
           const data = submissionsMap.get(item.id);
-          let body = '';
+          let body = payload.body;
 
           if (data?.confirmationId && domain) {
             body = this.processTemplateBody({
               templateBody: payload.body,
               email: item.email,
               domain,
-              submissionData: { ...data },
+              submissionData: data,
             });
           }
 
-          const unsubUrl = domain
-            ? `https://${domain}/unsubscribe?token=${token}`
-            : `https://ehpr.gov.bc.ca/unsubscribe?token=${token}`;
-
-          const fullHtmlBody = emailBodyWithUnsubscribeLink(body, unsubUrl);
-
+          body = getBodyWithFooter(body, token, domain);
           // don't show unsubscribe link for test emails
           const mailOptions: MailOptions = {
-            body: !payload.userId ? payload.body : fullHtmlBody,
+            body,
             from: process.env.MAIL_FROM ?? 'EHPRDoNotReply@dev.ehpr.freshworks.club',
             subject: payload.subject,
             to: [item.email],
           };
-          // remove a token for each processed request
           await limiter.removeTokens(1);
 
           await this.mailService.sendMailWithSES(mailOptions);
