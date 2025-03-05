@@ -54,9 +54,9 @@ export class RegistrantController {
   @Roles(Role.Admin, Role.User)
   @UseGuards(AuthGuard, RoleGuard)
   @Post('/send-mass-email')
-  async sendMassEmail(@Body() payload: EmailTemplateDTO) {
+  async sendMassEmail(@Req() { user }: UserRequest, @Body() payload: EmailTemplateDTO) {
     if (process.env.FEATURE_MASS_EMAIL === 'true') {
-      await this.registrantService.sendMassEmail(payload);
+      await this.registrantService.sendMassEmail(payload, user!);
     }
   }
 

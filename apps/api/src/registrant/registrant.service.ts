@@ -16,6 +16,7 @@ import {
   RegistrantFilterDTO,
   RegistrantRO,
   UnsubscribeReasonDTO,
+  User,
 } from '@ehpr/common';
 import { ProcessTemplate, SubmissionMap } from './types/template';
 import { SubmissionService } from 'src/submission/submission.service';
@@ -25,7 +26,7 @@ import { MailOptions } from '../mail/types/mail-options';
 import { MassEmailRecordService } from 'src/mass-email-record/mass-email-record.service';
 import { AppLogger } from 'src/common/logger.service';
 import { SubmissionEntity } from 'src/submission/entity/submission.entity';
-import { emailBodyWithUnsubscribeLink, updateSubmissionLink } from 'src/mail/mail.util';
+import { getBodyWithFooter, updateSubmissionLink } from 'src/mail/mail.util';
 
 @Injectable()
 export class RegistrantService {
@@ -75,7 +76,7 @@ export class RegistrantService {
     return [registrants, count];
   }
 
-  async sendMassEmail(payload: EmailTemplateDTO) {
+  async sendMassEmail(payload: EmailTemplateDTO, user: User) {
     // rate limit requests to handle AWS SES req/ second limits (currently 40/s)
     // 35 available tokens for each window of 1 second
     const limiter = new RateLimiter({ tokensPerInterval: 35, interval: 1000 });
@@ -98,37 +99,31 @@ export class RegistrantService {
           const domain = process.env.DOMAIN;
           const token = this.jwtService.sign({ email: item.email, id: item.id });
           const data = submissionsMap.get(item.id);
-          let body = '';
+          let body = payload.body;
 
           if (data?.confirmationId && domain) {
             body = this.processTemplateBody({
               templateBody: payload.body,
               email: item.email,
               domain,
-              submissionData: { ...data },
+              submissionData: data,
             });
           }
 
-          const unsubUrl = domain
-            ? `https://${domain}/unsubscribe?token=${token}`
-            : `https://ehpr.gov.bc.ca/unsubscribe?token=${token}`;
-
-          const fullHtmlBody = emailBodyWithUnsubscribeLink(body, unsubUrl);
-
+          body = getBodyWithFooter(body, payload.isTest ? '' : token, domain);
           // don't show unsubscribe link for test emails
           const mailOptions: MailOptions = {
-            body: !payload.userId ? payload.body : fullHtmlBody,
+            body,
             from: process.env.MAIL_FROM ?? 'EHPRDoNotReply@dev.ehpr.freshworks.club',
             subject: payload.subject,
             to: [item.email],
           };
-          // remove a token for each processed request
           await limiter.removeTokens(1);
 
           await this.mailService.sendMailWithSES(mailOptions);
         });
       // check for errors from test email
-      if (!payload.userId && errorsArray.length > 0) {
+      if (payload.isTest && errorsArray.length > 0) {
         throw new InternalServerErrorException('There was an issue trying to send the test email');
       }
     } catch (e) {
@@ -137,16 +132,10 @@ export class RegistrantService {
     }
 
     // don't make record for test emails
-    // no user id for test email
-    // create a record entry regardless if errored out
-    if (payload.userId) {
+    if (!payload.isTest) {
       const emailIds = payload.data.map(({ id }) => id);
       // format data for record entry
-      const record = this.massEmailRecordService.mapRecordObject(
-        payload.userId,
-        emailIds,
-        errorsArray,
-      );
+      const record = this.massEmailRecordService.mapRecordObject(user.id, emailIds, errorsArray);
 
       await this.massEmailRecordService.createMassEmailRecord(record);
     }

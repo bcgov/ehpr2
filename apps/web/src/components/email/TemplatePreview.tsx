@@ -35,7 +35,8 @@ export const TemplatePreview = ({ emails, template, open, onClose }: TemplatePre
       await sendMassEmail({
         subject: template.subject,
         body: template.body,
-        data: [{ id: user.id, email: user.email }],
+        data: [{ id: emails[0].id, email: user.email }],
+        isTest: true,
       });
     }
     setLoading(false);
@@ -46,7 +47,6 @@ export const TemplatePreview = ({ emails, template, open, onClose }: TemplatePre
     setLoading(true);
     const data = emails.map(e => ({ id: e.id, email: e.email }));
     await sendMassEmail({
-      userId: user?.id,
       subject: template.subject,
       body: template.body,
       data,
