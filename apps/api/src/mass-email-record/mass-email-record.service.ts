@@ -31,8 +31,10 @@ export class MassEmailRecordService {
    */
   mapRecordObject(
     userId: string,
+    subject: string,
     emailIds: string[],
     errors: PromisePoolError<{ status: string; name: string; message: string; userId: string }>[],
+    messageIds: Record<string, string>,
   ): Partial<MassEmailRecordEntity> {
     let mappedErrors: GenericError[] = [];
     // general exceptions and AWS errors have different formats
@@ -54,8 +56,10 @@ export class MassEmailRecordService {
 
     const record: Partial<MassEmailRecordEntity> = {
       userId,
+      subject,
       recipients: emailIds,
       errors: mappedErrors,
+      messageIds,
     };
 
     return record;

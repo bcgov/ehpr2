@@ -14,8 +14,14 @@ export class MassEmailRecordEntity {
   @Column({ type: 'jsonb', nullable: false })
   recipients!: string[];
 
+  @Column({ type: 'varchar', length: 255 })
+  subject!: string;
+
   @Column({ type: 'jsonb', default: null })
   errors?: GenericError[];
+
+  @Column({ name: 'message_ids', type: 'jsonb', default: null })
+  messageIds?: Record<string, string>;
 
   @CreateDateColumn()
   @Exclude()

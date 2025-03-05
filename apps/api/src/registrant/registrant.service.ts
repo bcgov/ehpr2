@@ -83,6 +83,7 @@ export class RegistrantService {
     // TODO: need to figure out a typing for this
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const errorsArray: any[] = [];
+    const messageIds: Record<string, string> = {};
 
     try {
       const submissionsMap = await this.mapSubmissionIdToConfirmationId(payload);
@@ -120,7 +121,8 @@ export class RegistrantService {
           };
           await limiter.removeTokens(1);
 
-          await this.mailService.sendMailWithSES(mailOptions);
+          const result = await this.mailService.sendMailWithSES(mailOptions);
+          messageIds[item.id] = result?.MessageId ?? '';
         });
       // check for errors from test email
       if (payload.isTest && errorsArray.length > 0) {
@@ -135,7 +137,13 @@ export class RegistrantService {
     if (!payload.isTest) {
       const emailIds = payload.data.map(({ id }) => id);
       // format data for record entry
-      const record = this.massEmailRecordService.mapRecordObject(user.id, emailIds, errorsArray);
+      const record = this.massEmailRecordService.mapRecordObject(
+        user.id,
+        payload.subject,
+        emailIds,
+        errorsArray,
+        messageIds,
+      );
 
       await this.massEmailRecordService.createMassEmailRecord(record);
     }
