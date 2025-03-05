@@ -5,5 +5,4 @@
 .auto.tfvars
 backend.hcl
 debug.tf
-*.zip
-build
+build/api.zip
