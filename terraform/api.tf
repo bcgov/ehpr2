@@ -1,13 +1,26 @@
+
+resource "aws_s3_bucket" "api" {
+  bucket = var.api_sources_bucket
+}
+resource "aws_s3_object" "api_lambda" {
+  bucket = aws_s3_bucket.api.bucket
+  key    = "api-lambda-s3"
+  source = "./build/empty_lambda.zip"
+}
+
 resource "aws_lambda_function" "api" {
   description      = "API for ${local.namespace}"
   function_name    = local.api_name
   role             = aws_iam_role.lambda.arn
   runtime          = "nodejs18.x"
-  filename         = var.api_artifact
-  source_code_hash = filebase64sha256(var.api_artifact)
+
   handler          = "api/lambda.handler"
   memory_size      = var.function_memory_mb
   timeout          = 30
+
+  source_code_hash = aws_s3_object.api_lambda.etag
+  s3_bucket        = aws_s3_bucket.api.bucket
+  s3_key           = aws_s3_object.api_lambda.key
 
   vpc_config {
     security_group_ids = [data.aws_security_group.app.id]
