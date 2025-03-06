@@ -5,6 +5,8 @@ module.exports = {
     '^@components$': '<rootDir>/src/components',
     '^@services$': '<rootDir>/src/services',
     '^@constants$': '<rootDir>/src/constants',
+    '^@util': '<rootDir>/src/util',
+    '^@hooks': '<rootDir>/src/hooks',
     /* Handle CSS imports (with CSS modules)
     https://jestjs.io/docs/webpack#mocking-css-modules */
     '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
