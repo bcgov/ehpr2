@@ -1,17 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { GenericError } from '@ehpr/common';
 import { HttpStatus, HttpException } from '@nestjs/common';
 import { CommonError } from 'src/common/common.errors';
-
-export class GenericError {
-  /** Internal code */
-  errorType!: string;
-
-  /** User friendly message */
-  errorMessage!: string;
-
-  /** Default is Internal Server Error */
-  httpStatus?: HttpStatus;
-}
 
 // tslint:disable-next-line: max-classes-per-file
 export class GenericException extends HttpException {

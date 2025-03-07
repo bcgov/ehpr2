@@ -8,10 +8,15 @@ import {
   Alert,
   ExtractSubmissions,
   InviteUser,
+  MassEmailHistory,
   useAuthContext,
   UserTable,
 } from '@components';
 import { AdminTab, adminTabs } from '@constants';
+
+const getTabTitle = (tab: AdminTab) => {
+  return adminTabs.find(t => t.value === tab)?.title ?? '';
+};
 
 const AdminPage = () => {
   const { user } = useAuthContext();
@@ -54,15 +59,21 @@ const AdminPage = () => {
         )}
 
         {selectedTab === AdminTab.REGISTRANTS && (
-          <AdminSection title='Registrants'>
+          <AdminSection title={getTabTitle(selectedTab)}>
             <AdminRegistrantsTable />
           </AdminSection>
         )}
 
-        {selectedTab === AdminTab.USERS && user?.role === Role.Admin && (
-          <AdminSection title='Users'>
+        {selectedTab === AdminTab.USERS && (
+          <AdminSection title={getTabTitle(selectedTab)}>
             <InviteUser />
             <UserTable />
+          </AdminSection>
+        )}
+
+        {selectedTab === AdminTab.MASS_EMAIL_HISTORY && (
+          <AdminSection title={getTabTitle(selectedTab)}>
+            <MassEmailHistory />
           </AdminSection>
         )}
       </AdminProvider>

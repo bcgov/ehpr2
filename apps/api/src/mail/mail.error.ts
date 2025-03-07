@@ -1,5 +1,5 @@
+import { GenericError } from '@ehpr/common';
 import { HttpStatus } from '@nestjs/common';
-import { GenericError } from 'src/common/generic-exception';
 
 export const MailError = {
   FAILED_TO_SEND_EMAIL: {

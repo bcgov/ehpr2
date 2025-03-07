@@ -6,6 +6,7 @@
         "name": "Allied Health Professional",
         "specialties": [
           "AnesthesiaAssistant",
+          "CardiologyTechnologist",
           "CardiovascularPerfusionist",
           "ClinicalCounsellor",
           "DiagnosticMedicalSonographer",
@@ -13,6 +14,8 @@
           "MagneticResonanceImagingTechnologistMRITech",
           "MedicalLaboratoryAssistant",
           "MedicalLaboratoryTechnologist",
+          "MedicalRadiationTechnologist",
+          "MedicalTechnician",
           "OccupationalTherapist",
           "Physiotherapist",
           "Psychologist",
@@ -109,6 +112,11 @@
         "name": "Anesthesia Assistant",
         "subspecialties": []
       },
+      "CardiologyTechnologist": {
+        "id": "CardiologyTechnologist",
+        "name": "Cardiology Technologist",
+        "subspecialties": []
+      },
       "CardiovascularPerfusionist": {
         "id": "CardiovascularPerfusionist",
         "name": "Cardiovascular Perfusionist",
@@ -142,6 +150,16 @@
       "MedicalLaboratoryTechnologist": {
         "id": "MedicalLaboratoryTechnologist",
         "name": "Medical Laboratory Technologist",
+        "subspecialties": []
+      },
+      "MedicalRadiationTechnologist": {
+        "id": "MedicalRadiationTechnologist",
+        "name": "Medical Radiation Technologist",
+        "subspecialties": []
+      },
+      "MedicalTechnician": {
+        "id": "MedicalTechnician",
+        "name": "Medical Technician",
         "subspecialties": []
       },
       "OccupationalTherapist": {
@@ -241,7 +259,6 @@
           "HighAcuity",
           "HomeCare",
           "HospicePalliativeCare",
-          "IENs",
           "IntensiveCare",
           "LabourandDelivery",
           "LongTermCare",
@@ -249,7 +266,6 @@
           "Neonatal",
           "NeonatalIntensiveCare",
           "Neuroscience",
-          "NewGradNurse",
           "NursingManagement",
           "Obstetrics",
           "OccupationalHealth",
@@ -285,7 +301,6 @@
           "HighAcuity",
           "HomeCare",
           "HospicePalliativeCare",
-          "IENs",
           "IntensiveCare",
           "LabourandDelivery",
           "LongTermCare",
@@ -294,7 +309,6 @@
           "NeonatalIntensiveCare",
           "Nephrology",
           "Neuroscience",
-          "NewGradNurse",
           "NursingManagement",
           "Obstetrics",
           "OccupationalHealth",
@@ -332,7 +346,6 @@
           "HighAcuity",
           "HomeCare",
           "HospicePalliativeCare",
-          "IENs",
           "IntensiveCare",
           "LabourandDelivery",
           "LongTermCare",
@@ -340,7 +353,6 @@
           "Neonatal",
           "NeonatalIntensiveCare",
           "Neuroscience",
-          "NewGradNurse",
           "NursingManagement",
           "Obstetrics",
           "OccupationalHealth",
@@ -376,7 +388,6 @@
           "HighAcuity",
           "HomeCare",
           "HospicePalliativeCare",
-          "IENs",
           "IntensiveCare",
           "LabourandDelivery",
           "LongTermCare",
@@ -384,7 +395,6 @@
           "Neonatal",
           "NeonatalIntensiveCare",
           "Neuroscience",
-          "NewGradNurse",
           "NursingManagement",
           "Obstetrics",
           "OccupationalHealth",
@@ -420,7 +430,6 @@
           "HighAcuity",
           "HomeCare",
           "HospicePalliativeCare",
-          "IENs",
           "IntensiveCare",
           "LabourandDelivery",
           "LongTermCare",
@@ -428,7 +437,6 @@
           "Neonatal",
           "NeonatalIntensiveCare",
           "Neuroscience",
-          "NewGradNurse",
           "NursingManagement",
           "Obstetrics",
           "OccupationalHealth",

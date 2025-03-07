@@ -304,32 +304,24 @@ export const AdminRegistrantsTable = () => {
                   key={reg.id}
                   className='text-left shadow-xs whitespace-nowrap text-sm border border-bcLightGray'
                 >
-                  <th className='py-4 pl-6' scope='col'>
+                  <td className='py-4 pl-6'>
                     <GeneralCheckbox
                       name={reg.email}
                       value={reg.id}
                       onChange={handleCheckboxChange}
                       checked={reg.checked}
                     />
-                  </th>
+                  </td>
 
-                  <th className='py-4 px-6' scope='col'>
-                    {reg.firstName}
-                  </th>
-                  <th className='px-6' scope='col'>
-                    {reg.lastName}
-                  </th>
-                  <th className='px-6' scope='col'>
-                    {reg.email}
-                  </th>
-                  <th className='px-6' scope='col'>
-                    {mapEnumData(reg.specialty, Specialty)}
-                  </th>
-                  <th className='px-6' scope='col'>
+                  <td className='py-4 px-6'>{reg.firstName}</td>
+                  <td className='px-6'>{reg.lastName}</td>
+                  <td className='px-6'>{reg.email}</td>
+                  <td className='px-6'>{mapEnumData(reg.specialty, Specialty)}</td>
+                  <td className='px-6'>
                     {!reg.deploymentLocations?.length
                       ? 'Any'
                       : mapEnumData(reg.deploymentLocations, Location)}
-                  </th>
+                  </td>
                 </tr>
               ))
             ) : (
