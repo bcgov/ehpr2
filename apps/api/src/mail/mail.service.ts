@@ -43,9 +43,7 @@ export class MailService {
     const template = handlebars.compile(templateContent, { strict: true });
     const body = template(mailable.context);
 
-    const result = await this.sendMailWithSES({ ...mailOptions, body } as MailOptions);
-
-    return result;
+    return this.sendMailWithSES({ ...mailOptions, body } as MailOptions);
   }
 
   public async sendMailWithSES(mailOptions: MailOptions) {
@@ -68,6 +66,6 @@ export class MailService {
       },
       Source: process.env.MAIL_FROM ?? 'EHPRDoNotReply@dev.ehpr.freshworks.club',
     };
-    return await this.ses.sendEmail(params).promise();
+    return this.ses.sendEmail(params).promise();
   }
 }

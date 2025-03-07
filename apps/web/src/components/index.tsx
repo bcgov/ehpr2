@@ -22,3 +22,6 @@ export * from './submission';
 export * from './email';
 export * from './tiptap';
 export * from './captcha';
+
+// Modal
+export * from './SimpleModal';

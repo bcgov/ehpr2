@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Inject,
@@ -9,12 +10,14 @@ import {
   Req,
   Res,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import {
   EmailTemplateDTO,
+  PaginationDTO,
   RegistrantFilterDTO,
   RegistrantRO,
   Role,
@@ -26,6 +29,8 @@ import { RegistrantService } from './registrant.service';
 import { Roles } from 'src/common/decorators';
 import { RoleGuard } from 'src/auth/role.guard';
 import { AppLogger } from 'src/common/logger.service';
+import { MassEmailRecordService } from 'src/mass-email-record/mass-email-record.service';
+import { UserEntity } from 'src/user/entity/user.entity';
 
 @Controller('registrants')
 @ApiTags('Registrants')
@@ -34,6 +39,7 @@ export class RegistrantController {
     @Inject(RegistrantService) private readonly registrantService: RegistrantService,
     @Inject(Logger) private readonly logger: AppLogger,
     private readonly jwtService: JwtService,
+    private readonly massEmailService: MassEmailRecordService,
   ) {}
 
   @Roles(Role.Admin, Role.User)
@@ -53,10 +59,29 @@ export class RegistrantController {
 
   @Roles(Role.Admin, Role.User)
   @UseGuards(AuthGuard, RoleGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get('/mass-email-history')
+  async getMassEmailHistory(@Query() query: PaginationDTO) {
+    if (process.env.FEATURE_MASS_EMAIL === 'true') {
+      return this.massEmailService.getMassEmailHistory(query);
+    }
+  }
+
+  @Roles(Role.Admin, Role.User)
+  @UseGuards(AuthGuard, RoleGuard)
+  @Get('/download-mass-email')
+  async downloadMassEmailHistory() {
+    if (process.env.FEATURE_MASS_EMAIL === 'true') {
+      return this.massEmailService.downloadMassEmailHistory();
+    }
+  }
+
+  @Roles(Role.Admin, Role.User)
+  @UseGuards(AuthGuard, RoleGuard)
   @Post('/send-mass-email')
   async sendMassEmail(@Req() { user }: UserRequest, @Body() payload: EmailTemplateDTO) {
     if (process.env.FEATURE_MASS_EMAIL === 'true') {
-      await this.registrantService.sendMassEmail(payload, user!);
+      await this.registrantService.sendMassEmail(payload, user! as UserEntity);
     }
   }
 

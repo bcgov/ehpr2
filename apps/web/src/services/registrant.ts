@@ -24,6 +24,11 @@ export const sendMassEmail = async (payload: EmailTemplateDTO): Promise<void> =>
   await axios.post('/registrants/send-mass-email', payload);
 };
 
+export const downloadMassEmailHistory = async () => {
+  const response = await axios.get<{ data: string }>(`/registrants/download-mass-email`);
+  return response?.data?.data;
+};
+
 export const unsubscribe = async (
   token: string,
   payload: DeepPartial<UnsubscribeReasonDTO>,

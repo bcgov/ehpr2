@@ -4,7 +4,10 @@ import { Repository } from 'typeorm';
 import { PromisePoolError } from '@supercharge/promise-pool';
 import { AppLogger } from '../common/logger.service';
 import { MassEmailRecordEntity } from './entity/mass-email-record.entity';
-import { GenericError } from 'src/common/generic-exception';
+import { GenericError, PaginationDTO, Recipient } from '@ehpr/common';
+import { UserEntity } from 'src/user/entity/user.entity';
+import dayjs from 'dayjs';
+import { createObjectCsvStringifier } from 'csv-writer';
 
 @Injectable()
 export class MassEmailRecordService {
@@ -30,9 +33,11 @@ export class MassEmailRecordService {
    * @returns the created record
    */
   mapRecordObject(
-    userId: string,
-    emailIds: string[],
+    user: UserEntity,
+    subject: string,
+    emailIds: Recipient[],
     errors: PromisePoolError<{ status: string; name: string; message: string; userId: string }>[],
+    messageIds: Record<string, string>,
   ): Partial<MassEmailRecordEntity> {
     let mappedErrors: GenericError[] = [];
     // general exceptions and AWS errors have different formats
@@ -53,11 +58,59 @@ export class MassEmailRecordService {
     }
 
     const record: Partial<MassEmailRecordEntity> = {
-      userId,
+      user,
+      subject,
       recipients: emailIds,
       errors: mappedErrors,
+      messageIds,
     };
 
     return record;
+  }
+
+  async getMassEmailHistory({ skip = 0, limit = 10 }: PaginationDTO) {
+    const [data, total] = await this.massEmailRecordRepository.findAndCount({
+      relations: ['user', 'user.ha'],
+      skip,
+      take: limit,
+      order: {
+        createdDate: 'DESC',
+      },
+    });
+
+    return { data, total };
+  }
+
+  async downloadMassEmailHistory() {
+    const records = await this.massEmailRecordRepository.find({
+      relations: ['user', 'user.ha'],
+      order: {
+        createdDate: 'DESC',
+      },
+    });
+
+    const history = records.map(r => ({
+      id: r.id,
+      date: dayjs(r.createdDate).format('YYYY-MM-DD HH:mm:ss'),
+      authority: r.user.ha?.name,
+      sender: r.user.email,
+      subject: r.subject,
+      recipients: JSON.stringify(r.recipients),
+      errors: JSON.stringify(r.errors),
+    }));
+
+    const header = [
+      { id: 'id', title: 'ID' },
+      { id: 'date', title: 'Send Date' },
+      { id: 'authority', title: 'Authority' },
+      { id: 'sender', title: 'Sender' },
+      { id: 'subject', title: 'Subject' },
+      { id: 'recipients', title: 'Recipients' },
+      { id: 'errors', title: 'Errors' },
+    ];
+
+    const stringifier = createObjectCsvStringifier({ header });
+
+    return stringifier.getHeaderString() + stringifier.stringifyRecords(history);
   }
 }

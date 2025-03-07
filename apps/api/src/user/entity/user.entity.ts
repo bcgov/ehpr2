@@ -21,8 +21,8 @@ export class UserEntity extends BaseEntity implements User {
   @Column({ type: 'timestamp', default: null })
   revokedDate!: Date | null;
 
-  @OneToMany(() => MassEmailRecordEntity, record => record.userId)
-  massEmailRecord!: MassEmailRecordEntity[];
+  @OneToMany(() => MassEmailRecordEntity, record => record.user)
+  massEmailRecords!: MassEmailRecordEntity[];
 
   @Column('integer')
   ha_id!: number;

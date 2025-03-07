@@ -16,7 +16,6 @@ import {
   RegistrantFilterDTO,
   RegistrantRO,
   UnsubscribeReasonDTO,
-  User,
 } from '@ehpr/common';
 import { ProcessTemplate, SubmissionMap } from './types/template';
 import { SubmissionService } from 'src/submission/submission.service';
@@ -27,6 +26,7 @@ import { MassEmailRecordService } from 'src/mass-email-record/mass-email-record.
 import { AppLogger } from 'src/common/logger.service';
 import { SubmissionEntity } from 'src/submission/entity/submission.entity';
 import { getBodyWithFooter, updateSubmissionLink } from 'src/mail/mail.util';
+import { UserEntity } from 'src/user/entity/user.entity';
 
 @Injectable()
 export class RegistrantService {
@@ -76,13 +76,14 @@ export class RegistrantService {
     return [registrants, count];
   }
 
-  async sendMassEmail(payload: EmailTemplateDTO, user: User) {
+  async sendMassEmail(payload: EmailTemplateDTO, user: UserEntity) {
     // rate limit requests to handle AWS SES req/ second limits (currently 40/s)
     // 35 available tokens for each window of 1 second
     const limiter = new RateLimiter({ tokensPerInterval: 35, interval: 1000 });
     // TODO: need to figure out a typing for this
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const errorsArray: any[] = [];
+    const messageIds: Record<string, string> = {};
 
     try {
       const submissionsMap = await this.mapSubmissionIdToConfirmationId(payload);
@@ -120,7 +121,8 @@ export class RegistrantService {
           };
           await limiter.removeTokens(1);
 
-          await this.mailService.sendMailWithSES(mailOptions);
+          const result = await this.mailService.sendMailWithSES(mailOptions);
+          messageIds[item.id] = result?.MessageId ?? '';
         });
       // check for errors from test email
       if (payload.isTest && errorsArray.length > 0) {
@@ -133,9 +135,14 @@ export class RegistrantService {
 
     // don't make record for test emails
     if (!payload.isTest) {
-      const emailIds = payload.data.map(({ id }) => id);
       // format data for record entry
-      const record = this.massEmailRecordService.mapRecordObject(user.id, emailIds, errorsArray);
+      const record = this.massEmailRecordService.mapRecordObject(
+        user,
+        payload.subject,
+        payload.data,
+        errorsArray,
+        messageIds,
+      );
 
       await this.massEmailRecordService.createMassEmailRecord(record);
     }
