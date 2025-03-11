@@ -52,13 +52,13 @@ DB_HOST = $(DB_HOST_PROD)
 endif
 
 ifeq ($(ENV_NAME), dev) 
-DOMAIN=dev.ehpr.freshworks.club
+DOMAIN=dev.ehpr.gov.bc.ca
 BASTION_INSTANCE_ID = $(BASTION_INSTANCE_ID_DEV)
 DB_HOST = $(DB_HOST_DEV)
 endif
 
 ifeq ($(ENV_NAME), test) 
-DOMAIN=test.ehpr.freshworks.club
+DOMAIN=test.ehpr.gov.bc.ca
 BASTION_INSTANCE_ID = $(BASTION_INSTANCE_ID_TEST)
 DB_HOST = $(DB_HOST_TEST)
 endif
