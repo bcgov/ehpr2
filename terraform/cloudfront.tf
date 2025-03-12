@@ -48,8 +48,8 @@ resource "aws_cloudfront_function" "request" {
 
 resource "aws_cloudfront_distribution" "app" {
   comment = local.app_name
-
-  aliases = local.fw_domain ? [var.domain] : ["ehpr.gov.bc.ca", "www.ehpr.gov.bc.ca"]
+  http_version = "http2and3"
+  aliases = local.is_prod ?  ["ehpr.gov.bc.ca", "www.ehpr.gov.bc.ca"] : [var.domain]
 
   origin {
     domain_name = aws_s3_bucket.app.bucket_regional_domain_name
@@ -162,7 +162,7 @@ resource "aws_cloudfront_distribution" "app" {
     cloudfront_default_certificate = local.has_domain ? false : true
 
     acm_certificate_arn      = local.has_domain ? data.aws_acm_certificate.domain[0].arn : null
-    minimum_protocol_version = local.has_domain ? "TLSv1.2_2019" : null
+    minimum_protocol_version = local.has_domain ? "TLSv1.2_2021" : null
     ssl_support_method       = local.has_domain ? "sni-only" : null
   }
 
