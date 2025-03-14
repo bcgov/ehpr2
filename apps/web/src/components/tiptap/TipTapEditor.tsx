@@ -46,12 +46,6 @@ export const TipTapEditor = ({
       Underline,
       Heading,
       Gapcursor,
-      // pargraphs have a large height, reduce it
-      Paragraph.configure({
-        HTMLAttributes: {
-          style: 'height: 1rem',
-        },
-      }),
       // tailwinds prose class hides the bullets with a large padding,
       // need to change padding to ol and ul
       BulletList.configure({
