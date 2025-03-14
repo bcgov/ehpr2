@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { EmailData, Location, Specialty } from '@constants';
+import { EmailData, Specialty } from '@constants';
 import { RegistrantFilterDTO, RegistrantRO } from '@ehpr/common';
 import { getRegistrants } from '@services';
 import { Spinner } from '../Spinner';
