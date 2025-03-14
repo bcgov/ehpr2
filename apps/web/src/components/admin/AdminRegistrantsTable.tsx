@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { EmailData, Specialty } from '@constants';
+import { EmailData, Location, Specialty } from '@constants';
 import { RegistrantFilterDTO, RegistrantRO } from '@ehpr/common';
 import { getRegistrants } from '@services';
 import { Spinner } from '../Spinner';
@@ -318,7 +318,9 @@ export const AdminRegistrantsTable = () => {
                   <td className='px-6'>{reg.email}</td>
                   <td className='px-6'>{mapEnumData(reg.specialty, Specialty)}</td>
                   <td className='px-6'>
-                    {!reg.deploymentLocations?.length ? 'Any' : reg.deploymentLocations.join(',')}
+                    {!reg.deploymentLocations?.length
+                      ? 'Any'
+                      : mapEnumData(reg.deploymentLocations, Location)}
                   </td>
                 </tr>
               ))
