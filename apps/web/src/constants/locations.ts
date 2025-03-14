@@ -83,4 +83,12 @@ export enum Location {
   'PeaceRiverSouth' = 'Peace River South',
   'PeaceRiverNorth' = 'Peace River North',
   'FortNelson' = 'Fort Nelson',
+  'Gitgaat' = 'Gitgaat',
+  'Gitxaala' = 'Gitxaala',
+  'Kitasoo' = 'Kitasoo',
+  'Kwadacha' = 'Kwadacha',
+  'LaxKwAlaams' = 'LaxKwAlaams',
+  'Tahltan' = 'Tahltan',
+  'TseyKehDene' = 'TseyKehDene',
+  'Ulkatcho' = 'Ulkatcho',
 }

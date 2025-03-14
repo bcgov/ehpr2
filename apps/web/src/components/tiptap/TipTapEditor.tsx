@@ -3,7 +3,6 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import BulletList from '@tiptap/extension-bullet-list';
 import Document from '@tiptap/extension-document';
 import ListItem from '@tiptap/extension-list-item';
-import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
 import Bold from '@tiptap/extension-bold';
 import Italic from '@tiptap/extension-italic';
@@ -46,12 +45,6 @@ export const TipTapEditor = ({
       Underline,
       Heading,
       Gapcursor,
-      // pargraphs have a large height, reduce it
-      Paragraph.configure({
-        HTMLAttributes: {
-          style: 'height: 0.625rem',
-        },
-      }),
       // tailwinds prose class hides the bullets with a large padding,
       // need to change padding to ol and ul
       BulletList.configure({
