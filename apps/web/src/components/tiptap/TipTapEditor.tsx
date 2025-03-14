@@ -49,7 +49,7 @@ export const TipTapEditor = ({
       // pargraphs have a large height, reduce it
       Paragraph.configure({
         HTMLAttributes: {
-          style: 'height: 0.625rem',
+          style: 'height: 1rem',
         },
       }),
       // tailwinds prose class hides the bullets with a large padding,

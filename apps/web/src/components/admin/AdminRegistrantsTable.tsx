@@ -318,9 +318,7 @@ export const AdminRegistrantsTable = () => {
                   <td className='px-6'>{reg.email}</td>
                   <td className='px-6'>{mapEnumData(reg.specialty, Specialty)}</td>
                   <td className='px-6'>
-                    {!reg.deploymentLocations?.length
-                      ? 'Any'
-                      : mapEnumData(reg.deploymentLocations, Location)}
+                    {!reg.deploymentLocations?.length ? 'Any' : reg.deploymentLocations.join(',')}
                   </td>
                 </tr>
               ))
