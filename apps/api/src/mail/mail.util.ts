@@ -11,7 +11,7 @@ export const getBodyWithFooter = (body: string, token: string, domain?: string) 
     <html>
       <body>
         ${body}
-        <footer style="text-align: center;">
+        <footer style="text-align: left;">
           <table cellspacing="0" style="width: 100%">
             <tr>
               <td style="border: solid 1px gray; margin: 0; border-right: none; width: 100px; background-color: #FFFFFF !important">
