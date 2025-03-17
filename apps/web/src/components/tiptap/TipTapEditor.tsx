@@ -13,6 +13,7 @@ import Link from '@tiptap/extension-link';
 import History from '@tiptap/extension-history';
 import Gapcursor from '@tiptap/extension-gapcursor';
 import Image from '@tiptap/extension-image';
+import Paragraph from '@tiptap/extension-paragraph';
 
 import { EmailTemplate } from '@constants';
 import { TipTapToolbar } from './TipTapToolbar';
@@ -45,6 +46,7 @@ export const TipTapEditor = ({
       Underline,
       Heading,
       Gapcursor,
+      Paragraph,
       // tailwinds prose class hides the bullets with a large padding,
       // need to change padding to ol and ul
       BulletList.configure({
