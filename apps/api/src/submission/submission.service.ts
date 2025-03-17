@@ -12,6 +12,8 @@ import {
   isMoh,
   ExtractApplicantsFilterDTO,
   SpecialtyDTO,
+  PreferencesInformationDTO,
+  SubmissionPayloadDTO,
 } from '@ehpr/common';
 import { MailService } from 'src/mail/mail.service';
 import { ConfirmationMailable } from 'src/mail/mailables/confirmation.mailable';
@@ -234,16 +236,23 @@ export class SubmissionService {
     if (!record) {
       throw new NotFoundException(`No submission record for ${confirmationId}`);
     }
-
-    const update: Partial<SubmissionEntity> = {
-      payload: { ...record.payload, ...payload },
+    // Need to cast update preferences information DTO as partial in order to skip fields not in form
+    const preferences: Partial<PreferencesInformationDTO> = {
+      ...payload.preferencesInformation,
+    };
+    let update: Partial<SubmissionEntity> = {
+      payload: {
+        ...record.payload,
+        ...payload,
+        preferencesInformation: { ...record.payload.preferencesInformation, ...preferences },
+      },
       withdrawn: !payload.status.interested,
     };
 
     await this.submissionRepository.update(record.id, update);
     if (process.env.ENABLE_UPDATE_CONFIRMATION === 'true') {
       const updateConformationMailable = new UpdateConfirmationMailable(
-        { email: payload.contactInformation.email } as Recipient,
+        { email: payload?.contactInformation?.email } as Recipient,
         {
           firstName: (payload.personalInformation as PersonalInformationDTO).firstName,
           confirmationId: this.convertIdToDashedId(confirmationId),

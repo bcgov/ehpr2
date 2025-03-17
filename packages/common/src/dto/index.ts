@@ -12,3 +12,4 @@ export * from './submission-payload.dto';
 export * from './submission.dto';
 export * from './unsubscribe-reason.dto';
 export * from './update-submission.dto';
+export * from './update-preferences-information.dto';
