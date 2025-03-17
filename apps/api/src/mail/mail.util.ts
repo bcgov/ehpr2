@@ -4,8 +4,8 @@ export const getBodyWithFooter = (body: string, token: string, domain?: string) 
     : `https://ehpr.gov.bc.ca/unsubscribe?token=${token}`;
 
   const logoUrl = domain
-    ? `https://${domain}/assets/img/BC_HLTH_V_RGB_pos.svg`
-    : `https://ehpr.gov.bc.ca/assets/img/BC_HLTH_V_RGB_pos.svg`;
+    ? `https://${domain}/assets/img/MOH_Logo.png`
+    : `https://ehpr.gov.bc.ca/assets/img/MOH_Logo.png`;
 
   return `
     <html>
