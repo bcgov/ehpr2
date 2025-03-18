@@ -63,7 +63,7 @@ export const formExportColumnHeaders = [
   { id: 'hasExperienceWithRemoteRuralCommunity', title: 'Experience With Rural Community' },
   {
     id: 'completedSanyasIndigenousCulturalSafetyTraining',
-    title: 'Completed Sanyas Indigenous Cultural Safety Training',
+    title: "Completed San'yas Indigenous Cultural Safety Training",
   },
 ];
 
