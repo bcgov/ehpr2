@@ -7,6 +7,7 @@ import {
   PersonalInformationDTO,
   StatusUpdateDTO,
   UpdateSubmissionDTO,
+  UpdatePreferencesInformationDTO,
 } from '@ehpr/common';
 import { updateSubmission } from '@services';
 import { Button, Field, Radio } from '@components';
@@ -26,6 +27,7 @@ export const UpdateSubmissionForm = ({ email, code }: UpdateSubmissionFormProps)
   const initialValues: UpdateSubmissionDTO = {
     personalInformation: new PersonalInformationDTO(),
     contactInformation: new ContactInformationDTO(),
+    preferencesInformation: new UpdatePreferencesInformationDTO(),
     status: new StatusUpdateDTO(),
   };
   initialValues.contactInformation.email = email;
@@ -128,6 +130,25 @@ export const UpdateSubmissionForm = ({ email, code }: UpdateSubmissionFormProps)
             <div className='mt-2 pt-3'>
               <Radio.Boolean name='status.interested' legend='Are you still interested in EHPR?' />
             </div>
+            <div className='py-3'>
+              <Radio.Boolean
+                name='preferencesInformation.hasExperienceWithIndigenousCommunity'
+                legend='Do you have experience working with Indigenous communities?'
+              />
+            </div>
+            <div className='py-3'>
+              <Radio.Boolean
+                name='preferencesInformation.hasExperienceWithRemoteRuralCommunity'
+                legend='Do you have experience working in rural/remote communities?'
+              />
+            </div>
+            <div className='py-3'>
+              <Radio.Boolean
+                name='preferencesInformation.completedSanyasIndigenousCulturalSafetyTraining'
+                legend="Have you completed the San'yas Indigenous Cultural Safety Training?"
+              />
+            </div>
+
             <div className='py-3'>
               <Radio.Boolean name='status.deployed' legend='Are you currently deployed?' />
             </div>

@@ -9,7 +9,6 @@ import { AppModule } from '../src/app.module';
 import validSubmissionData from './fixture/validSubmission.json';
 import invalidSubmissionDataFirstname from './fixture/invalidSubmission_firstname.json';
 import { validationPipeConfig } from 'src/app.config';
-import appDataSource from 'src/ormconfig'; // Adjust path to your DataSource instance
 import { SubmissionService } from 'src/submission/submission.service';
 import { ThrottlerIPGuard } from 'src/submission/throttler-ip.guard';
 
@@ -52,6 +51,11 @@ describe('AppController (e2e)', () => {
       contactInformation,
       personalInformation,
       status: { interested: true, deployed: true },
+      preferencesInformation: {
+        hasExperienceWithIndigenousCommunity: true,
+        hasExperienceWithRemoteRuralCommunity: true,
+        completedSanyasIndigenousCulturalSafetyTraining: true,
+      },
     };
   });
 
