@@ -58,6 +58,13 @@ export const formExportColumnHeaders = [
   { id: 'deployed', title: 'Deployed' },
   { id: 'deploymentStart', title: 'Deployment Start' },
   { id: 'deploymentEnd', title: 'Deployment End' },
+
+  { id: 'hasExperienceWithIndigenousCommunity', title: 'Experience With Indigenous Community' },
+  { id: 'hasExperienceWithRemoteRuralCommunity', title: 'Experience With Rural Community' },
+  {
+    id: 'completedSanyasIndigenousCulturalSafetyTraining',
+    title: "Completed San'yas Indigenous Cultural Safety Training",
+  },
 ];
 
 export const flattenAndTransformFormData = (submissions: SubmissionEntity[]) => {
@@ -115,6 +122,12 @@ export const flattenAndTransformFormData = (submissions: SubmissionEntity[]) => 
       deployed: booleanToYesNo(status?.deployed ?? false),
       deploymentStart: status?.startDate,
       deploymentEnd: status?.endDate,
+      hasExperienceWithIndigenousCommunity:
+        preferencesInformation?.hasExperienceWithIndigenousCommunity,
+      hasExperienceWithRemoteRuralCommunity:
+        preferencesInformation?.hasExperienceWithRemoteRuralCommunity,
+      completedSanyasIndigenousCulturalSafetyTraining:
+        preferencesInformation?.completedSanyasIndigenousCulturalSafetyTraining,
     };
 
     if (!credentialInformation?.specialties.length) {
