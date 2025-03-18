@@ -13,7 +13,6 @@ import {
   ExtractApplicantsFilterDTO,
   SpecialtyDTO,
   PreferencesInformationDTO,
-  SubmissionPayloadDTO,
 } from '@ehpr/common';
 import { MailService } from 'src/mail/mail.service';
 import { ConfirmationMailable } from 'src/mail/mailables/confirmation.mailable';
@@ -240,7 +239,7 @@ export class SubmissionService {
     const preferences: Partial<PreferencesInformationDTO> = {
       ...payload.preferencesInformation,
     };
-    let update: Partial<SubmissionEntity> = {
+    const update: Partial<SubmissionEntity> = {
       payload: {
         ...record.payload,
         ...payload,

@@ -4,7 +4,6 @@ import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { ContactInformationDTO } from './contact-information.dto';
 import { PersonalInformationDTO } from './personal-information.dto';
 import { StatusUpdateDTO } from './status-update.dto';
-import { PreferencesInformationDTO } from './preferences-information.dto';
 import { UpdatePreferencesInformationDTO } from './update-preferences-information.dto';
 
 export class UpdateSubmissionDTO {
