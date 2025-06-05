@@ -35,7 +35,7 @@ const Submission = () => {
             </p>
             <p className='mb-4'>
               <b>For more information about the EHPR, please refer to the&nbsp;</b>
-              <ExternalLink href='/assets/EHPR-FAQs-May-2024.pdf'>FAQs</ExternalLink>.
+              <ExternalLink href='/assets/EHPR-FAQs-Mar-2025.pdf'>FAQs</ExternalLink>.
             </p>
             <p className='mb-4'>
               Health sector workers and students (including resident physicians and employed student
