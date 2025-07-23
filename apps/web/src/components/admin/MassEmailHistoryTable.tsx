@@ -71,6 +71,13 @@ export const MassEmailHistoryTable = () => {
     setErrorListOpen(true);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const checkEmptyObject = (obj: Record<string, any> | undefined) => {
+    if (obj === undefined || obj === null) return true;
+    for (const i in obj) return false;
+    return true;
+  };
+
   return (
     <div className='h-full'>
       <Pagination
@@ -98,17 +105,18 @@ export const MassEmailHistoryTable = () => {
           </tr>
         </thead>
         <tbody className='text-sm'>
-          {data?.data?.map(record => (
-            <tr key={record.id} className='border border-bcLightGray'>
-              <td className='px-5 py-3'>
-                {dayjs(record.createdDate).format('MMM D, YYYY h:mm A')}
-              </td>
-              <td className='px-5 py-3'>{record.user.ha?.name}</td>
-              <td className='px-5 py-3'>{record.user.name}</td>
-              <td className='px-5 py-3'>{getRecipientsCell(record, showRecipientList)}</td>
-              <td className='px-5 py-3'>{getErrorsCell(record, showErrors)}</td>
-            </tr>
-          ))}
+          {!checkEmptyObject(data?.data) &&
+            data?.data.map(record => (
+              <tr key={record.id} className='border border-bcLightGray'>
+                <td className='px-5 py-3'>
+                  {dayjs(record.createdDate).format('MMM D, YYYY h:mm A')}
+                </td>
+                <td className='px-5 py-3'>{record.user.ha?.name}</td>
+                <td className='px-5 py-3'>{record.user.name}</td>
+                <td className='px-5 py-3'>{getRecipientsCell(record, showRecipientList)}</td>
+                <td className='px-5 py-3'>{getErrorsCell(record, showErrors)}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
       <SimepleModal

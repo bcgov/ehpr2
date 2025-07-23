@@ -34,7 +34,7 @@ module.exports = {
                 "'self'",
                 'http://localhost:4000',
                 'http://localhost:8080',
-                'https://keycloak.freshworks.club',
+                process.env.NEXT_PUBLIC_KC_BASE ?? 'https://keycloak.freshworks.club',
               ],
               frameSrc: ["'self'", 'http://localhost:8080'],
               formAction: "'self'",

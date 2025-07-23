@@ -141,6 +141,10 @@ It is recommended to run database as a container in any case. On the other hand,
 $ make start-local-db
 ```
 
+#### Starting a local SES instance
+
+You can use [aws-ses-v2-local](https://www.npmjs.com/package/aws-ses-v2-local) to run a local SES instance, follow the package guide to set up and run SES locally, this would avoid extra AWS charges from developing.
+
 #### Make apps connect to each other.
 
 > **Database Hostname Resolution**
@@ -155,15 +159,16 @@ $ make start-local-db
 
 #### Start the apps.
 
+Always run apps using `make` commands to ensure that envs are loaded properly.
+
 ```bash
-$ yarn build
-$ yarn start:local
+$ make app-local
 ```
 
 or if you want `hot reloading` or want to debug, run apps in `watch` mode.
 
 ```bash
-$ yarn watch
+$ make watch-app-local
 ```
 
 > In order to make breakpoints work in `watch` mode, set `sourceMap` to `true` in [tsconfig.json](tsconfig.json) and restart the apps.
