@@ -184,9 +184,8 @@ export class RegistrantService {
   // Used to make lookup faster in PromisePool loop
   private async mapSubmissionIdToConfirmationId(payload: EmailTemplateDTO) {
     const ids = payload.data.map(submission => submission.id);
-    const { submissions, missingIds } = await this.submissionService.getSubmissionsPersonalInfo(
-      ids,
-    );
+    const { submissions, missingIds } =
+      await this.submissionService.getSubmissionsPersonalInfo(ids);
 
     if (missingIds?.length) {
       this.logger.warn(`Unable to find the following submissions ${missingIds.join(', ')}`);

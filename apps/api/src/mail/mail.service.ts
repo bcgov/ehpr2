@@ -12,7 +12,6 @@ import { PromiseResult } from 'aws-sdk/lib/request';
 
 @Injectable()
 export class MailService {
-
   private readonly ses: aws.SES | null;
 
   constructor(@Inject(Logger) private readonly logger: AppLogger) {
