@@ -120,6 +120,11 @@ print-env:
 	@echo "$$TF_BACKEND_CFG"
 	@echo "\n*********************\n"
 
+watch-app-local: print-env start-local-db
+	@echo "++\n***** Running api + web in local Node server\n++"
+	@yarn 
+	@yarn watch
+
 app-local: print-env start-local-db
 	@echo "++\n***** Running api + web in local Node server\n++"
 	@yarn 

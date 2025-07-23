@@ -13,18 +13,25 @@ import { PromiseResult } from 'aws-sdk/lib/request';
 @Injectable()
 export class MailService {
 
-  ses = process.env.RUNTIME_ENV === 'local' ? new aws.SES({
-    endpoint: 'http://localhost:8005',
-    region: 'aws-ses-v2-local',
-    credentials: { accessKeyId: 'ANY_STRING', secretAccessKey: 'ANY_STRING' },
-  }) : process.env.AWS_S3_REGION ? new aws.SES({ region: process.env.AWS_S3_REGION }) : null;
-
-  // ses = process.env.AWS_S3_REGION ? new aws.SES({ region: process.env.AWS_S3_REGION, endpoint: process.env.RUNTIME_ENV==="local" ? 'http://localhost:9001' : undefined }) : null;
+  private readonly ses: aws.SES | null;
 
   constructor(@Inject(Logger) private readonly logger: AppLogger) {
     const templatePath = path.resolve(`${__dirname}/templates/partials/layout.hbs`);
     const templateContent = fs.readFileSync(templatePath, 'utf-8');
     handlebars.registerPartial('layout', templateContent);
+
+    if (process.env.RUNTIME_ENV === 'local') {
+      // Local SES setup
+      this.ses = new aws.SES({
+        endpoint: 'http://localhost:8005',
+        region: 'aws-ses-v2-local',
+        credentials: { accessKeyId: 'ANY_STRING', secretAccessKey: 'ANY_STRING' },
+      });
+    } else if (process.env.AWS_S3_REGION) {
+      this.ses = new aws.SES({ region: process.env.AWS_S3_REGION });
+    } else {
+      this.ses = null;
+    }
   }
 
   /**
