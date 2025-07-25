@@ -74,7 +74,7 @@ export const MassEmailHistoryTable = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const checkEmptyObject = (obj: Record<string, any> | undefined) => {
     if (obj === undefined || obj === null) return true;
-    for (const i in obj) return false;
+    for (const _i in obj) return false;
     return true;
   };
 
