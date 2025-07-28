@@ -147,8 +147,8 @@ export const TemplatePreview = ({ emails, template, open, onClose }: TemplatePre
                 <div className='col-span-3 my-3 mr-3'>
                   <strong>Total Emails:</strong> {emails.length}
                 </div>
-                {emails.map(({ email, name }) => (
-                  <div key={email + name} className='w-full mb-2'>
+                {emails.map(({ id, email, name }) => (
+                  <div key={id} className='w-full mb-2'>
                     <span>
                       <strong>Name: </strong>
                       {name}
