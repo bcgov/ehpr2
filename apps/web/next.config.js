@@ -1,14 +1,15 @@
 /** @type {import('next').NextConfig} */
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { createSecureHeaders } = require('next-secure-headers');
 
 module.exports = {
   output: 'export',
   experimental: {
     scrollRestoration: true,
+    forceSwcTransforms: true,
   },
   reactStrictMode: true,
-  swcMinify: false,
   async redirects() {
     return [
       {
