@@ -95,8 +95,8 @@ export const TipTapEditor = ({
   editor?.setOptions({
     editorProps: {
       attributes: {
-        class: `txt-editor prose max-w-none border border-black focus:outline-none  ${
-          editorFullRoundBorder ? 'rounded' : 'rounded-b-lg'
+        class: `txt-editor prose max-w-none border border-black focus:outline-hidden  ${
+          editorFullRoundBorder ? 'rounded-sm' : 'rounded-b-lg'
         }`,
       },
       // for copy pasting from outside like Outlook

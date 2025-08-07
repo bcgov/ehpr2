@@ -49,7 +49,7 @@ export const UpdateSubmissionForm = ({ email, code }: UpdateSubmissionFormProps)
 
   return (
     <div className=''>
-      <div className='w-full text-center pt-10 text-3xl text-bcBluePrimary'>
+      <div className='w-full text-center pt-10 text-3xl text-bc-blue-primary'>
         Update Your EHPR Registration
       </div>
       <UpdateSubmissionHeader />

@@ -44,7 +44,7 @@ const ModalContainer: React.FC<FullScreenModalProps> = ({ children, open, handle
             leaveFrom='opacity-100 translate-y-0 sm:scale-100'
             leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
           >
-            <DialogPanel className='inline-block align-bottom bg-white rounded text-left shadow-xl transform transition-all sm:my-8 sm:align-middle w-3/4 p-1'>
+            <DialogPanel className='inline-block align-bottom bg-white rounded-sm text-left shadow-xl transform transition-all sm:my-8 sm:align-middle w-3/4 p-1'>
               <div className='bg-white '>{children}</div>
             </DialogPanel>
           </TransitionChild>

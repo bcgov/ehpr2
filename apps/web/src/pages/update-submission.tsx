@@ -14,9 +14,9 @@ const UpdateSubmission = () => {
 
   return (
     <>
-      <div className='grow bg-bcLightBackground flex justify-center md:pt-11 pt-5'>
+      <div className='grow bg-bc-light-background flex justify-center md:pt-11 pt-5'>
         <div className='h-min w-full xl:w-layout mx-2 mb-12'>
-          <div className='bg-white rounded p-4 border-b mb-5'>
+          <div className='bg-white rounded-sm p-4 border-b mb-5'>
             {email && code && (
               <UpdateSubmissionForm email={email as string} code={code as string} />
             )}

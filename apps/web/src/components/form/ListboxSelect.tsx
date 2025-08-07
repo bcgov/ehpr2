@@ -37,7 +37,7 @@ const renderSelection = (
       <div className='block'>
         {selected.map(option => (
           <div key={option.value}>
-            <div className='flex justify-between align-middle text-sm bg-gray-300 rounded p-1 my-0.5 mr-1 px-2'>
+            <div className='flex justify-between align-middle text-sm bg-gray-300 rounded-sm p-1 my-0.5 mr-1 px-2'>
               <p className='truncate'>{option.label}</p>
               <FontAwesomeIcon
                 aria-label={`Remove ${option.label}`}
@@ -78,7 +78,7 @@ export const MultiItemListbox = ({
     <>
       <ListboxButton
         className={`${commonStyles} relative w-full cursor-default py-2 pl-3 pr-10 text-left
-        focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2
+        focus:outline-hidden focus-visible:border-indigo-500 focus-visible:ring-2
       focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300
         `}
         id={id}
@@ -97,13 +97,13 @@ export const MultiItemListbox = ({
         <ListboxOptions
           className={`${
             menuPlacement === 'top' ? 'top-0 -translate-y-full' : ''
-          } z-50 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none`}
+          } z-50 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden`}
         >
           {options.map(option => (
             <ListboxOption
               key={option.value}
               value={option}
-              className='relative cursor-default select-none py-2 pr-4 pl-8 data-[active]:bg-gray-100 text-gray-900'
+              className='relative cursor-default select-none py-2 pr-4 pl-8 data-active:bg-gray-100 text-gray-900'
             >
               {({ selected }) => (
                 <>
@@ -160,7 +160,7 @@ export const SingleItemListbox = ({
     <>
       <ListboxButton
         className={`${commonStyles} relative w-full cursor-default py-2 pl-3 pr-10 text-left
-         focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300`}
+         focus:outline-hidden focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300`}
         id={id}
       >
         {selected ? <span className='block truncate'>{displayText(selected)}</span> : 'Select...'}
@@ -177,13 +177,13 @@ export const SingleItemListbox = ({
         <ListboxOptions
           className={`${
             menuPlacement === 'top' ? 'top-0 -translate-y-full' : ''
-          } z-50 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none`}
+          } z-50 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden`}
         >
           {options.map(option => (
             <ListboxOption
               key={option.value}
               value={option.value}
-              className='relative cursor-default select-none py-2 pr-4 pl-3 data-[active]:bg-gray-100 text-gray-900'
+              className='relative cursor-default select-none py-2 pr-4 pl-3 data-active:bg-gray-100 text-gray-900'
             >
               <span className='block truncate'>{option.label || option.value}</span>
             </ListboxOption>
