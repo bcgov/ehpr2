@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@ehpr/common": "1.0.1",
-    "@fortawesome/fontawesome-svg-core": "1.2.36",
+    "@fortawesome/fontawesome-svg-core": "^7.0.0",
     "@fortawesome/free-solid-svg-icons": "7.0.0",
-    "@fortawesome/react-fontawesome": "0.2.3",
+    "@fortawesome/react-fontawesome": "^0.2.3",
     "@headlessui/react": "2.0.4",
     "@tiptap/extension-bold": "2.2.2",
     "@tiptap/extension-bullet-list": "2.2.2",
@@ -48,7 +48,7 @@
     "react-datepicker": "7.2.0",
     "react-dom": "19.1.1",
     "react-oidc-context": "^3.3.0",
-    "react-toastify": "9.1.3",
+    "react-toastify": "^11.0.5",
     "swr": "2.3.2"
   },
   "devDependencies": {

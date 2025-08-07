@@ -8,6 +8,13 @@ export interface FieldProps extends FieldAttributes<any> {
   label?: string | React.ReactNode;
   description?: string | React.ReactNode;
   disabled?: boolean;
+  type?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  as?: string | React.ComponentType<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  component?: React.ComponentType<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  children?: React.ReactNode | ((props: any) => React.ReactNode);
   className?: string;
   maxLength?: number;
 }
