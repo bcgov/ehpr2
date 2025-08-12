@@ -249,7 +249,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
   return (
     <div className='py-7'>
       <div className='flex items-center gap-4 mb-3'>
-        <h2 className='text-bcBluePrimary text-xl'>{sectionHeader}</h2>
+        <h2 className='text-bc-blue-primary text-xl'>{sectionHeader}</h2>
         <Link href={`/submission/${step}`} variant='outline'>
           Edit
         </Link>
@@ -301,7 +301,7 @@ interface ReviewSpecialtyProps {
 const ReviewSpecialty: React.FC<ReviewSpecialtyProps> = ({ specialty }) => {
   if (!specialty.id) return null;
   return (
-    <div className='grid grid-cols-2 rounded border border-gray-300 p-2'>
+    <div className='grid grid-cols-2 rounded-sm border border-gray-300 p-2'>
       <ReviewItem label='Main Speciality' value={getSpecialtyLabelById(specialty.id)} />
       <ReviewItemList
         label='Subspeciality'
@@ -335,7 +335,7 @@ const ReviewDeploymentHsda: React.FC<ReviewDeploymentHsdaProps> = ({ lhas }) => 
                 <h5 className='mb-1'>{hsda.name}</h5>
                 <ul
                   key={ha.id}
-                  className='flex flex-col gap-2 py-4 px-5 rounded border border-gray-300'
+                  className='flex flex-col gap-2 py-4 px-5 rounded-sm border border-gray-300'
                 >
                   {hsda.lhas.map((lha: Lha) => (
                     <li key={lha.id} className=''>

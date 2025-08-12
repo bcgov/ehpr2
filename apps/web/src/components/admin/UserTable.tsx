@@ -21,7 +21,7 @@ export const UserTable = () => {
     } else if (user.active) {
       return (
         <Button variant='outline' onClick={() => revoke(user.id)}>
-          <span className='text-bcRedError'>Revoke</span>
+          <span className='text-bc-red-error'>Revoke</span>
         </Button>
       );
     } else {
@@ -32,7 +32,7 @@ export const UserTable = () => {
   return (
     <div className='overflow-x-auto'>
       <table className='w-full table-fixed'>
-        <thead className='whitespace-nowrap bg-bcLightGray text-bcDeepBlack'>
+        <thead className='whitespace-nowrap bg-bc-light-gray text-bcDeepBlack'>
           <tr className='border-b-2 border-yellow-300 text-sm'>
             <th className='w-24' scope='col'>
               ID
@@ -47,7 +47,7 @@ export const UserTable = () => {
               Role
             </th>
             <th className='w-24' scope='col'>
-              Created/<span className='text-bcRedError'>Revoked</span>
+              Created/<span className='text-bc-red-error'>Revoked</span>
             </th>
             <th className='py-4 w-24' scope='col'>
               Action
@@ -61,7 +61,7 @@ export const UserTable = () => {
               <td>{_.startCase(user.name)}</td>
               <td>{user.email}</td>
               <td>{_.capitalize(user.role)}</td>
-              <td className={user.revokedDate ? 'text-bcRedError' : ''}>
+              <td className={user.revokedDate ? 'text-bc-red-error' : ''}>
                 {dayjs(user.revokedDate ?? user.createdDate).format('YYYY-MM-DD')}
               </td>
               <td>{getButton(user)}</td>

@@ -18,7 +18,7 @@ const getRecipientsCell = (record: MassEmailRecord, onClick: (record: MassEmailR
   const text = `${count} recipients`;
   return (
     <div className='flex flex-row gap-2'>
-      <button className='border p-1 px-2 rounded' onClick={() => onClick(record)}>
+      <button className='border p-1 px-2 rounded-sm' onClick={() => onClick(record)}>
         {text}
       </button>
     </div>
@@ -35,7 +35,7 @@ const getErrorsCell = (record: MassEmailRecord, onClick: (record: MassEmailRecor
   const text = `${count} errors`;
   return (
     <div className='flex flex-row gap-2'>
-      <button className='border p-1 px-2 rounded' onClick={() => onClick(record)}>
+      <button className='border p-1 px-2 rounded-sm' onClick={() => onClick(record)}>
         {text}
       </button>
     </div>
@@ -86,7 +86,7 @@ export const MassEmailHistoryTable = () => {
       />
       <table className='table-auto w-full text-left'>
         <thead>
-          <tr className='border-b-2 bg-bcLightGray border-yellow-300 text-sm'>
+          <tr className='border-b-2 bg-bc-light-gray border-yellow-300 text-sm'>
             <th className='px-5 py-4' scope='col'>
               Date
             </th>
@@ -107,7 +107,7 @@ export const MassEmailHistoryTable = () => {
         <tbody className='text-sm'>
           {!checkEmptyObject(data?.data) &&
             data?.data.map(record => (
-              <tr key={record.id} className='border border-bcLightGray'>
+              <tr key={record.id} className='border border-bc-light-gray'>
                 <td className='px-5 py-3'>
                   {dayjs(record.createdDate).format('MMM D, YYYY h:mm A')}
                 </td>

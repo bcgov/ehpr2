@@ -17,12 +17,12 @@ export const HyperlinkInsert = ({
 }: HyperLinkInsertProps) => {
   return (
     <div className='absolute mt-11 w-96 z-50 bg-white'>
-      <div className='border-2 border-black p-2 rounded'>
+      <div className='border-2 border-black p-2 rounded-sm'>
         <span className='font-bold '>Insert Link</span>
         <input
           type='text'
           value={linkText}
-          className='border rounded p-2 my-3 w-full'
+          className='border rounded-sm p-2 my-3 w-full'
           placeholder='Insert address...'
           onChange={e => setLinkText(e?.target?.value)}
         />

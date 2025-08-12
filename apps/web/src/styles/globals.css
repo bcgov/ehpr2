@@ -1,19 +1,79 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-html,
-body,
-#__next {
-  height: 100%;
+@plugin '@tailwindcss/typography';
+
+@theme {
+  --font-*: initial;
+  --font-sans: BCSans;
+
+  --color-bc-blue-primary: #003366;
+  --color-bc-yellow-primary: #fcba19;
+  --color-bc-black: #313132;
+  --color-bc-gray: #606060;
+  --color-bc-light-gray: #f2f2f2;
+  --color-bc-blue-link: #1a5a96;
+  --color-bc-blue-nav: #38598a;
+  --color-bc-red-error: #d8292f;
+  --color-bc-green-success: #2e8540;
+  --color-bc-yellow-warning: #f5a623;
+  --color-bc-blue-accent: #38598a;
+  --color-bc-blue-indicator: #0053a4;
+  --color-bc-light-background: #e5e5e5;
+  --color-bc-light-blue-background: #d9eaf7;
+  --color-bc-orange: #f6a622;
+  --color-bc-disabled: #cfcfcf;
+  --color-bc-yellow-cream: #f9f1c6;
+
+  --text-3xl: 1.5rem;
+  --text-4xl: 2rem;
+  --text-5xl: 2.5rem;
+
+  --ring-offset-width-10: 10px;
+
+  --shadow-2xl: 0 4px 16px 0 rgba(35, 64, 117, 0.3);
+
+  --min-width-5: 1.25rem;
+
+  --width-layout: 1140px;
+
+  --tracking-widest: 0.3em;
+  --tracking-wider: 0.1em;
+
+  --border-width-10: 10px;
 }
 
-.txt-editor {
-  overflow-y: scroll;
-  resize: vertical;
-  min-height: 12.5rem;
-  width: auto;
-  padding: 4px;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@layer utilities {
+  html,
+  body,
+  #__next {
+    height: 100%;
+  }
+
+  .txt-editor {
+    overflow-y: scroll;
+    resize: vertical;
+    min-height: 12.5rem;
+    width: auto;
+    padding: 4px;
+  }
 }
 
 @layer base {

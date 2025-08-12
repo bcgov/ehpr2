@@ -36,7 +36,7 @@ const UnsubscribePage = () => {
           <Formik initialValues={initialValues} validate={validator} onSubmit={handleSubmit}>
             {({ values, isSubmitting }) => (
               <FormikForm>
-                <div className='flex flex-col items-center w-full border border-black rounded p-5'>
+                <div className='flex flex-col items-center w-full border border-black rounded-sm p-5'>
                   <div className='text-xl font-bold mb-1'>Reason for Unsubscribing</div>
                   <p className='text-sm'>
                     If this was an accident, you may close the window and stay subscribed.

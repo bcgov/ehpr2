@@ -26,7 +26,7 @@ const Confirmation: React.FC = () => {
   return (
     <div className='md:pt-40 pt-12 px-5 md:px-4'>
       <div className='max-w-xl text-center'>
-        <div className='text-3xl md:text-4xl px-5 md:px-2 text-bcBluePrimary mb-5 '>
+        <div className='text-3xl md:text-4xl px-5 md:px-2 text-bc-blue-primary mb-5 '>
           Thank You For Filling Out The Form
         </div>
         <Notice>

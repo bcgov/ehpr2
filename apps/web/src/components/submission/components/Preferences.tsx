@@ -184,7 +184,7 @@ const DeploymentLocationSelector: React.FC = () => {
   return (
     <div>
       {haOptions.map(({ value, label }) => (
-        <div key={value} className='bg-bcLightGray rounded mb-4'>
+        <div key={value} className='bg-bc-light-gray rounded-sm mb-4'>
           <Disclosure
             buttonText={
               <span className='font-bold text-black p-5'>
@@ -193,7 +193,7 @@ const DeploymentLocationSelector: React.FC = () => {
                   href={HaPdfSizeMap[value].url}
                   target='_blank'
                   rel='noreferrer'
-                  className='font-bold text-bcBlueLink'
+                  className='font-bold text-bc-blue-link'
                   aria-label={`${label} map PDF`}
                 >
                   PDF, {HaPdfSizeMap[value].size}MB
@@ -207,7 +207,7 @@ const DeploymentLocationSelector: React.FC = () => {
                   <button
                     type='button'
                     onClick={() => selectAll(value)}
-                    className='text-bcBlueLink disabled:text-gray-500 font-bold'
+                    className='text-bc-blue-link disabled:text-gray-500 font-bold'
                     disabled={allSelected(value)}
                   >
                     Select all
@@ -216,7 +216,7 @@ const DeploymentLocationSelector: React.FC = () => {
                   <button
                     type='button'
                     onClick={() => unselectAll(value)}
-                    className='text-bcBlueLink disabled:text-gray-500 font-bold'
+                    className='text-bc-blue-link disabled:text-gray-500 font-bold'
                     disabled={allUnselected(value)}
                   >
                     Un-select all
@@ -249,7 +249,7 @@ const HsdaLocationSelector: React.FC<LocationListProps> = ({ region, lhaOptions 
   return (
     <fieldset>
       <legend className='font-bold text-black mb-2 text-base'>{region}</legend>
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-5 border border-gray-400 rounded text-black bg-white'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-5 border border-gray-400 rounded-sm text-black bg-white'>
         {lhaOptions.map(location => (
           <Checkbox
             key={location.value}

@@ -245,7 +245,7 @@ export const AdminRegistrantsTable = () => {
 
   return (
     <>
-      <div className='flex flex-row items-center p-3 border border-bcLightGray rounded'>
+      <div className='flex flex-row items-center p-3 border border-bc-light-gray rounded-sm'>
         Filter:
         <AdminSearch search={search} />
       </div>
@@ -258,10 +258,10 @@ export const AdminRegistrantsTable = () => {
         pageOptions={{ pageIndex, pageSize: limit, total }}
         onChange={handlePageOptions}
       />
-      <div className='overflow-x-auto border border-bcLightGray'>
+      <div className='overflow-x-auto border border-bc-light-gray'>
         <table className='text-left w-full'>
-          <thead className='whitespace-nowrap  text-bcBlack'>
-            <tr className='border-b-2 bg-bcLightGray border-yellow-300 text-sm'>
+          <thead className='whitespace-nowrap  text-bc-black'>
+            <tr className='border-b-2 bg-bc-light-gray border-yellow-300 text-sm'>
               <th className='flex gap-5 py-4 pl-6' scope='col'>
                 <GeneralCheckbox
                   label='Select Page'
@@ -297,12 +297,12 @@ export const AdminRegistrantsTable = () => {
               </th>
             </tr>
           </thead>
-          <tbody className='text-bcBlack'>
+          <tbody className='text-bc-black'>
             {registrants && registrants.length > 0 ? (
               registrants.map((reg: RegistrantRO) => (
                 <tr
                   key={reg.id}
-                  className='text-left shadow-xs whitespace-nowrap text-sm border border-bcLightGray'
+                  className='text-left shadow-2xs whitespace-nowrap text-sm border border-bc-light-gray'
                 >
                   <td className='py-4 pl-6'>
                     <GeneralCheckbox
@@ -328,7 +328,7 @@ export const AdminRegistrantsTable = () => {
               <tr>
                 <td
                   colSpan={6}
-                  className='text-lg text-center shadow-xs whitespace-nowrap font-bold py-5'
+                  className='text-lg text-center shadow-2xs whitespace-nowrap font-bold py-5'
                 >
                   No Registrants were founds
                 </td>
