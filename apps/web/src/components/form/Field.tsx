@@ -9,6 +9,8 @@ export interface FieldProps extends FieldAttributes<any> {
   description?: string | React.ReactNode;
   disabled?: boolean;
   type?: string;
+  min?: string | number | Date;
+  validate?: (value: string) => string | undefined;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   as?: string | React.ComponentType<any>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,6 +27,8 @@ export const Field: React.FC<FieldProps> = props => {
     disabled,
     type,
     as,
+    min,
+    validate,
     component,
     className,
     maxLength,
@@ -57,6 +61,8 @@ export const Field: React.FC<FieldProps> = props => {
             },
           )
         }
+        min={min}
+        validate={validate}
         disabled={disabled}
         as={as}
         type={type}

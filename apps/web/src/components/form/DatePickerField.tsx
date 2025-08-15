@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useRef } from 'react';
 import { FieldProps } from 'formik';
 import classNames from 'classnames';
@@ -60,7 +61,9 @@ export const DatePickerField = (props: DatePickerFieldProps) => {
           }}
           onBlur={() => {
             form.setFieldTouched(name, true);
-            valRef.current && form.setFieldValue(name, valRef.current);
+            if (valRef.current) {
+              form.setFieldValue(name, valRef.current);
+            }
           }}
           onChangeRaw={e => {
             const target = e?.target as HTMLInputElement;
