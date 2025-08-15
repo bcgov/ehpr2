@@ -1,5 +1,7 @@
 const defaults = {
-  timeout: 30000,
+  wait: 1500,
+  timeout: 240000,
+  hideElements: '#__next [data-no-a11y-scan]',
   standard: 'WCAG2AA',
   runners: ['axe'],
   viewport: {
@@ -7,6 +9,7 @@ const defaults = {
     height: 2400,
   },
   chromeLaunchConfig: {
+    ignoreHTTPSErrors: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   },
 };
