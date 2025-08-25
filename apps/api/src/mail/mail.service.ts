@@ -24,7 +24,7 @@ export class MailService {
       this.ses = new aws.SES({
         endpoint: 'http://localhost:8005',
         region: 'aws-ses-v2-local',
-        credentials: { accessKeyId: 'ANY_STRING', secretAccessKey: 'ANY_STRING' },
+        credentials: { accessKeyId: 'ANY_STRING', secretAccessKey: 'ANY_STRING' }, // NOSONAR
       });
     } else if (process.env.AWS_S3_REGION) {
       this.ses = new aws.SES({ region: process.env.AWS_S3_REGION });
