@@ -1,6 +1,5 @@
 import { booleanToYesNo, getSubSpecialtyById, splitLhasByHa } from '@ehpr/common';
 import { INestApplicationContext } from '@nestjs/common';
-import aws from 'aws-sdk';
 import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2';
 import * as csvWriter from 'csv-writer';
 import dayjs from 'dayjs';
