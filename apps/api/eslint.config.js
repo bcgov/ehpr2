@@ -1,5 +1,3 @@
-const { defineConfig, globalIgnores } = require('eslint/config');
-
 const js = require('@eslint/js');
 
 const { FlatCompat } = require('@eslint/eslintrc');
@@ -10,9 +8,9 @@ const compat = new FlatCompat({
   allConfig: js.configs.all,
 });
 
-module.exports = defineConfig([
+module.exports = [
+  ...compat.extends('../../.eslintrc.js'),
   {
-    extends: compat.extends('../../.eslintrc.js'),
+    ignores: ['**/.eslintrc.js', '**/*spec.ts', '**/dist'],
   },
-  globalIgnores(['**/.eslintrc.js', '**/*spec.ts', '**/dist']),
-]);
+];
