@@ -8,6 +8,13 @@
   },
   "moduleDirectories": ["node_modules", "src"],
   "moduleNameMapper": {
-    "src/(.*)": "<rootDir>/src/$1"
+    "^src/(.*)$": "<rootDir>/src/$1"
+  },
+  "transformIgnorePatterns": ["node_modules/(?!(nanoid)/)"],
+  "extensionsToTreatAsEsm": [".ts"],
+  "globals": {
+    "ts-jest": {
+      "useESM": true
+    }
   }
 }
