@@ -16,7 +16,12 @@ import { ThrottlerIPGuard } from 'src/submission/throttler-ip.guard';
 export const cleanSubmissionTable = async (app: INestApplication<any>) => {
   // Use the service to clean the submission table
   const submissionService = app.get(SubmissionService);
-  await submissionService.truncateTable();
+  try {
+    await submissionService.truncateTable();
+  } catch (error) {
+    // Ignore errors if table doesn't exist
+    console.info('Table cleanup skipped - table may not exist yet');
+  }
 };
 
 describe('AppController (e2e)', () => {
