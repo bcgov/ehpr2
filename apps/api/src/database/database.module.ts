@@ -26,7 +26,7 @@ const getEnvironmentSpecificConfig = (env?: string) => {
         password: process.env.TEST_POSTGRES_PASSWORD,
         database: process.env.TEST_POSTGRES_DATABASE,
         entities: [SubmissionEntity, UserEntity, MassEmailRecordEntity, HealthAuthoritiesEntity],
-        migrations: ['dist/migration/*.js'],
+        migrations: [join(__dirname, '../migration/*.{ts,js}')],
         logging: ['error', 'warn', 'migration'] as LoggerOptions,
       };
     case 'script':

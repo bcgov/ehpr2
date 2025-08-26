@@ -4,17 +4,17 @@
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
+    "^.+\\.(t|j)s$": [
+      "ts-jest",
+      {
+        "useESM": true
+      }
+    ]
   },
   "moduleDirectories": ["node_modules", "src"],
   "moduleNameMapper": {
     "^src/(.*)$": "<rootDir>/src/$1"
   },
   "transformIgnorePatterns": ["node_modules/(?!(nanoid)/)"],
-  "extensionsToTreatAsEsm": [".ts"],
-  "globals": {
-    "ts-jest": {
-      "useESM": true
-    }
-  }
+  "extensionsToTreatAsEsm": [".ts"]
 }

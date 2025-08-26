@@ -11,6 +11,7 @@ import invalidSubmissionDataFirstname from './fixture/invalidSubmission_firstnam
 import { validationPipeConfig } from 'src/app.config';
 import { SubmissionService } from 'src/submission/submission.service';
 import { ThrottlerIPGuard } from 'src/submission/throttler-ip.guard';
+import { DataSource } from 'typeorm';
 
 // Function to clean the submission table before each test
 export const cleanSubmissionTable = async (app: INestApplication<any>) => {
@@ -24,13 +25,32 @@ export const cleanSubmissionTable = async (app: INestApplication<any>) => {
   }
 };
 
+// Function to ensure database schema exists
+export const ensureDatabaseSchema = async (app: INestApplication<any>) => {
+  const dataSource = app.get(DataSource);
+  try {
+    // Check if datasource is initialized, if not initialize it
+    if (!dataSource.isInitialized) {
+      await dataSource.initialize();
+    }
+    // Run pending migrations to ensure schema exists
+    await dataSource.runMigrations();
+    console.info('Database migrations completed successfully');
+  } catch (error) {
+    console.warn(
+      'Migration failed or already up to date:',
+      error instanceof Error ? error.message : String(error),
+    );
+  }
+};
+
 describe('AppController (e2e)', () => {
   let app: INestApplication;
   let confirmationId: string;
   let updateSubmissionData: UpdateSubmissionDTO;
 
-  beforeEach(async () => {
-    // Setup application
+  beforeAll(async () => {
+    // Setup application once for all tests
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
@@ -42,6 +62,11 @@ describe('AppController (e2e)', () => {
     app.useGlobalPipes(new ValidationPipe(validationPipeConfig));
     await app.init();
 
+    // Ensure database schema exists by running migrations
+    await ensureDatabaseSchema(app);
+  });
+
+  beforeEach(async () => {
     // Clean submission table and create a valid submission for tests
     await cleanSubmissionTable(app);
 
@@ -64,8 +89,12 @@ describe('AppController (e2e)', () => {
     };
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await app.close();
+  });
+
+  afterEach(async () => {
+    // No need to close app here since we're reusing it
   });
 
   it('successfully saves a valid submission', async () => {
@@ -122,21 +151,28 @@ describe('AppController (e2e)', () => {
   });
 
   describe('Rate-Limiting Tests', () => {
-    beforeEach(async () => {
-      await cleanSubmissionTable(app);
+    let rateLimitApp: INestApplication;
 
+    beforeAll(async () => {
       // Create a new app instance with rate-limiting enabled
       const moduleFixture: TestingModule = await Test.createTestingModule({
         imports: [AppModule],
       }).compile();
 
-      app = moduleFixture.createNestApplication();
-      app.useGlobalPipes(new ValidationPipe(validationPipeConfig));
-      await app.init();
+      rateLimitApp = moduleFixture.createNestApplication();
+      rateLimitApp.useGlobalPipes(new ValidationPipe(validationPipeConfig));
+      await rateLimitApp.init();
+
+      // Ensure database schema exists by running migrations
+      await ensureDatabaseSchema(rateLimitApp);
     });
 
-    afterEach(async () => {
-      await app.close();
+    beforeEach(async () => {
+      await cleanSubmissionTable(rateLimitApp);
+    });
+
+    afterAll(async () => {
+      await rateLimitApp.close();
     });
 
     it('enforces rate limit after multiple requests', async () => {
@@ -145,7 +181,7 @@ describe('AppController (e2e)', () => {
 
       // First limitRequestCount succeed
       for (let i = 0; i < limitRequestCount; i++) {
-        await request(app.getHttpServer())
+        await request(rateLimitApp.getHttpServer())
           .post('/submission')
           .send(validSubmissionData)
           .expect(201);
@@ -153,7 +189,7 @@ describe('AppController (e2e)', () => {
 
       // Subsequent requests should fail
       for (let i = 0; i < requestCount - limitRequestCount; i++) {
-        await request(app.getHttpServer())
+        await request(rateLimitApp.getHttpServer())
           .post('/submission')
           .send(validSubmissionData)
           .expect(429); // Too Many Requests
