@@ -1632,7 +1632,7 @@ __metadata:
     "@types/jsonwebtoken": 9.0.10
     "@types/node": 24.3.0
     "@types/nodemailer": 7.0.1
-    "@types/secure-random-string": 1.1.3
+    "@types/secure-random-string": ^1.1.3
     "@types/supertest": 6.0.3
     "@vendia/serverless-express": 4.12.6
     axios: 1.11.0
@@ -5150,7 +5150,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/secure-random-string@npm:1.1.3":
+"@types/secure-random-string@npm:^1.1.3":
   version: 1.1.3
   resolution: "@types/secure-random-string@npm:1.1.3"
   checksum: 583c8937f8573f47ed8826d4a0d06c52c9106c8711eb00c7d85829a53a8e6b72c2dd3e7b97e0cfe081f2297a77361b281c744c81a85a5c37b2527e2fcaf0fdc8
