@@ -33,7 +33,6 @@ resource "aws_lambda_function" "api" {
       # updates these based on some ruleset managed elsewhere.
       filename,
       source_code_hash,
-      last_modified,
     ]
   }
   environment {
