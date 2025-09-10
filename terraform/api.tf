@@ -12,7 +12,7 @@ resource "aws_lambda_function" "api" {
   description      = "API for ${local.namespace}"
   function_name    = local.api_name
   role             = aws_iam_role.lambda.arn
-  runtime          = "nodejs18.x"
+  runtime          = "nodejs22.x"
 
   handler          = "api/lambda.handler"
   memory_size      = var.function_memory_mb
@@ -33,8 +33,6 @@ resource "aws_lambda_function" "api" {
       # updates these based on some ruleset managed elsewhere.
       filename,
       source_code_hash,
-      source_code_size,
-      last_modified,
     ]
   }
   environment {

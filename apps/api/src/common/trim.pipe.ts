@@ -20,7 +20,6 @@ export class TrimPipe implements PipeTransform {
     return values;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   transform(values: any, metadata: ArgumentMetadata) {
     const { type } = metadata;
 
