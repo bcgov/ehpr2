@@ -144,7 +144,7 @@ export const Credential: React.FC = () => {
                   {specialties.length !== specialtyOptions?.length && specialtySelectorEnabled ? (
                     <button
                       type='button'
-                      className='text-bcBlueLink'
+                      className='text-bc-blue-link'
                       aria-label='add another specialty'
                       onClick={() => arrayHelpers.push({ ...defaultSpecialtyValue })}
                     >
@@ -197,7 +197,7 @@ export const SpecialtySelector: React.FC<SpecialtySelectorProps> = ({
   enableDelete,
 }) => {
   return (
-    <div className='grid md:grid-cols-2 gap-2 w-full ring-gray-200 ring-1 ring-offset-10 rounded-sm'>
+    <div className='grid md:grid-cols-2 gap-2 w-full ring-gray-200 ring-1 ring-offset-10 rounded-xs'>
       <div className='col-span-1'>
         <Field name={`credentialInformation.specialties[${index}].id`}>
           {({ field, form }: FieldProps) => (
@@ -218,7 +218,7 @@ export const SpecialtySelector: React.FC<SpecialtySelectorProps> = ({
         {enableDelete ? (
           <button
             type='button'
-            className='text-bcRedError'
+            className='text-bc-red-error'
             aria-label='delete this specialty'
             onClick={() => deleteFunction()}
           >

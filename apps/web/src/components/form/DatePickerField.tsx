@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useRef } from 'react';
 import { FieldProps } from 'formik';
 import classNames from 'classnames';
@@ -37,13 +38,13 @@ export const DatePickerField = (props: DatePickerFieldProps) => {
   const DatePickerFieldComponent = useCallback(
     ({ field, form }: FieldProps) => (
       <div
-        className={classNames('flex pr-2 border-b-2 border-bcBlack', bgColour ?? 'bg-bcGrayInput')}
+        className={classNames('flex pr-2 border-b-2 border-bc-black', bgColour ?? 'bg-bcGrayInput')}
       >
         <DatePicker
           id={name}
           dateFormat={format}
           className={classNames(
-            'w-full rounded-none block h-10 pl-1 disabled:bg-bcDisabled',
+            'w-full rounded-none block h-10 pl-1 disabled:bg-bc-disabled',
             bgColour ?? 'bg-bcGrayInput',
           )}
           placeholderText={format?.toLowerCase()}
@@ -60,7 +61,9 @@ export const DatePickerField = (props: DatePickerFieldProps) => {
           }}
           onBlur={() => {
             form.setFieldTouched(name, true);
-            valRef.current && form.setFieldValue(name, valRef.current);
+            if (valRef.current) {
+              form.setFieldValue(name, valRef.current);
+            }
           }}
           onChangeRaw={e => {
             const target = e?.target as HTMLInputElement;

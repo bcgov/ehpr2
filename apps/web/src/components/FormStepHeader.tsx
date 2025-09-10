@@ -20,7 +20,7 @@ export const FormStepHeader = ({ children }: FormStepHeaderProps) => {
     <h1
       ref={headerRef}
       tabIndex={-1}
-      className='text-bcBluePrimary text-center text-2xl focus:outline-none mb-5'
+      className='text-bc-blue-primary text-center text-2xl focus:outline-hidden mb-5'
     >
       {children}
     </h1>

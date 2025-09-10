@@ -21,7 +21,7 @@ export interface RadioType extends React.FC<RadioProps> {
 export const Radio: RadioType = ({ legend, name, options, horizontal }) => {
   return (
     <fieldset className='flex flex-col gap-4'>
-      <legend className='text-bcBlack font-bold mb-4'>{legend}</legend>
+      <legend className='text-bc-black font-bold mb-4'>{legend}</legend>
       <div
         className={classnames(
           'flex',
@@ -78,7 +78,7 @@ const BooleanRadio: React.FC<BooleanRadioProps> = ({
 
   return (
     <fieldset className='flex flex-col gap-4'>
-      <legend className='text-bcBlack font-bold mb-4'>{legend}</legend>
+      <legend className='text-bc-black font-bold mb-4'>{legend}</legend>
       <div
         className={classnames(
           'flex',

@@ -30,6 +30,7 @@ const Altcha = ({ onVerify }: AltchaProps) => {
 
   /* Configure your `challengeurl` and remove the `test` attribute, see docs: https://altcha.org/docs/website-integration/#using-altcha-widget  */
   return (
+    // @ts-expect-error: altcha-widget is not recognized
     <altcha-widget
       ref={widgetRef}
       style={
@@ -38,6 +39,8 @@ const Altcha = ({ onVerify }: AltchaProps) => {
         } as React.CSSProperties
       }
       challengeurl={`${process.env.NEXT_PUBLIC_API_URL}/captcha`}
+      // TODO: Fix this unrecognized error
+      // @ts-expect-error: altcha-widget is not recognized
     ></altcha-widget>
   );
 };

@@ -62,7 +62,7 @@ export const InviteUser = () => {
         </Button>
       </div>
       <Modal open={open} handleClose={handleClose}>
-        <DialogTitle className='text-lg font-bold leading-6 text-bcBlueLink border-b p-4'>
+        <DialogTitle className='text-lg font-bold leading-6 text-bc-blue-link border-b p-4'>
           Invite a new user
         </DialogTitle>
         <div className='p-4 mt-4'>
@@ -78,7 +78,7 @@ export const InviteUser = () => {
                 </div>
                 <div className='flex flex-row align-middle mb-5'>
                   <Field name='role' component={SelectRole} />
-                  <div className='ml-4 mt-auto text-bcGray'>{getRoleDescription(values.role)}</div>
+                  <div className='ml-4 mt-auto text-bc-gray'>{getRoleDescription(values.role)}</div>
                 </div>
                 <div className='text-right py-3 pr-8'>
                   <Button variant='primary' type='submit' disabled={!isValid || isSubmitting}>

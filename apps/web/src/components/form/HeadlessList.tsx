@@ -59,7 +59,7 @@ export const HeadlessList = <T,>({
     <Field>
       <div className='mb-2'>
         {label && (
-          <Label className='block text-bcBlack text-base font-bold' htmlFor={id}>
+          <Label className='block text-bc-black text-base font-bold' htmlFor={id}>
             {label}
           </Label>
         )}

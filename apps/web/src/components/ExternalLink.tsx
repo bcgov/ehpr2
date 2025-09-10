@@ -7,7 +7,12 @@ interface ExternalLinkProps {
 
 export const ExternalLink = ({ href, children }: ExternalLinkProps) => {
   return (
-    <a href={href} target='_blank' rel='noopener noreferrer' className='text-bcBlueLink underline'>
+    <a
+      href={href}
+      target='_blank'
+      rel='noopener noreferrer'
+      className='text-bc-blue-link underline'
+    >
       {children}
     </a>
   );

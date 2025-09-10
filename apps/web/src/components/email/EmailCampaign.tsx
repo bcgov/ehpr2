@@ -37,7 +37,7 @@ export const EmailCampaign = (props: EmailCampaignProps) => {
 
   return (
     <FullScreenModal open={open} handleClose={handleClose}>
-      <DialogTitle className='flex flex-row text-lg font-bold leading-6 text-bcBlueLink border-b p-4'>
+      <DialogTitle className='flex flex-row text-lg font-bold leading-6 text-bc-blue-link border-b p-4'>
         <div>Create Email Template</div>
         <button
           autoFocus={false}

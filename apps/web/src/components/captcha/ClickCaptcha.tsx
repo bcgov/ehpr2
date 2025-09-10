@@ -50,7 +50,7 @@ export const ClickCaptcha: React.FC<ClickCaptchaProps> = ({ onVerify }) => {
       <button
         type='button'
         onClick={handleVerifyClick}
-        className={`flex items-center justify-center w-6 h-6 border-2 rounded focus:outline-none ${
+        className={`flex items-center justify-center w-6 h-6 border-2 rounded focus:outline-hidden ${
           isVerified ? 'border-green-500 bg-green-500' : 'border-gray-400'
         }`}
         disabled={isVerified || isLoading}

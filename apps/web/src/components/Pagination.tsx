@@ -49,7 +49,7 @@ export const Pagination = (props: PaginationProps) => {
   }, [pageSize, pageIndex]);
 
   return (
-    <div className='flex flex-row w-full bg-white text-bcBlack border-b border-t border-l'>
+    <div className='flex flex-row w-full bg-white text-bc-black border-b border-t border-l'>
       <div className='text-sm py-4'>
         <span className='pl-6 mr-3'>Items per page: </span>
       </div>

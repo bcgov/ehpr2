@@ -71,7 +71,7 @@ export const TemplatePreview = ({ emails, template, open, onClose }: TemplatePre
     <>
       {showConfirmationModal ? (
         <Modal open={showConfirmationModal} handleClose={closeConfirmationModal}>
-          <DialogTitle className='text-lg font-bold leading-6 text-bcBlueLink border-b p-4'>
+          <DialogTitle className='text-lg font-bold leading-6 text-bc-blue-link border-b p-4'>
             Please Confirm
           </DialogTitle>
           {/* TODO: add legal disclaimer */}
@@ -90,7 +90,7 @@ export const TemplatePreview = ({ emails, template, open, onClose }: TemplatePre
         </Modal>
       ) : (
         <FullScreenModal open={open} handleClose={onClose}>
-          <DialogTitle className='flex flex-row text-lg font-bold leading-6 text-bcBlueLink border-b p-4'>
+          <DialogTitle className='flex flex-row text-lg font-bold leading-6 text-bc-blue-link border-b p-4'>
             <div>Template Preview</div>
             <button aria-label='Close modal' className='ml-auto' onClick={onClose}>
               <FontAwesomeIcon icon={faWindowClose} size='2x' />
@@ -126,7 +126,7 @@ export const TemplatePreview = ({ emails, template, open, onClose }: TemplatePre
               type='text'
               value={template.subject}
               readOnly
-              className='grow focus:outline-none'
+              className='grow focus:outline-hidden'
             />
           </div>
           <div className='mx-5 mt-2 font-bold'>Body</div>
