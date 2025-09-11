@@ -14,7 +14,7 @@ resource "aws_lambda_function" "api" {
   role             = aws_iam_role.lambda.arn
   runtime          = "nodejs22.x"
 
-  handler          = "api/lambda.handler"
+  handler          = "api/src/lambda.handler"
   memory_size      = var.function_memory_mb
   timeout          = 30
 
