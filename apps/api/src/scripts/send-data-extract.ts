@@ -1,6 +1,6 @@
 import { booleanToYesNo, getSubSpecialtyById, splitLhasByHa } from '@ehpr/common';
 import { INestApplicationContext } from '@nestjs/common';
-import aws from 'aws-sdk';
+import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2';
 import * as csvWriter from 'csv-writer';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
@@ -148,9 +148,20 @@ export const flattenAndTransformFormData = (submissions: SubmissionEntity[]) => 
   return flatNormalizedSubmissions;
 };
 
-const SES = new aws.SES();
-// use nodemailer transport instead of writing raw email to attach a file using pure SES
-const transport = nodemailer.createTransport({ SES }); // NOSONAR
+let sesClient = new SESv2Client({ region: process.env.AWS_S3_REGION });
+
+if (process.env.RUNTIME_ENV === 'local') {
+  // Local SES setup
+  sesClient = new SESv2Client({
+    endpoint: 'http://localhost:8005',
+    region: 'aws-ses-v2-local',
+    credentials: { accessKeyId: 'ANY_STRING', secretAccessKey: 'ANY_STRING' }, // NOSONAR
+  });
+}
+
+const transport = nodemailer.createTransport({
+  SES: { sesClient, SendEmailCommand },
+}); // NOSONAR
 
 const mailOptions = {
   from: process.env.MAIL_FROM ?? 'EHPRDoNotReply@gov.bc.ca',

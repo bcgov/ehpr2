@@ -1,14 +1,15 @@
 /** @type {import('next').NextConfig} */
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { createSecureHeaders } = require('next-secure-headers');
 
 module.exports = {
   output: 'export',
   experimental: {
     scrollRestoration: true,
+    forceSwcTransforms: true,
   },
   reactStrictMode: true,
-  swcMinify: false,
   async redirects() {
     return [
       {
@@ -36,7 +37,11 @@ module.exports = {
                 'http://localhost:8080',
                 process.env.NEXT_PUBLIC_KC_BASE ?? 'https://keycloak.freshworks.club',
               ],
-              frameSrc: ["'self'", 'http://localhost:8080'],
+              frameSrc: [
+                "'self'",
+                'http://localhost:8080',
+                process.env.NEXT_PUBLIC_KC_BASE ?? 'https://keycloak.freshworks.club',
+              ],
               formAction: "'self'",
               frameAncestors: ["'self'"],
               workerSrc: ["'self'", 'blob:'],

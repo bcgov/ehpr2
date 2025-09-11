@@ -4,7 +4,6 @@ import type { AppProps } from 'next/app';
 import { AuthProvider as OidcAuthProvider, AuthProviderProps } from 'react-oidc-context';
 import { ToastContainer } from 'react-toastify';
 import { config } from '@fortawesome/fontawesome-svg-core';
-import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { AuthProvider, Footer, Header } from '@components';

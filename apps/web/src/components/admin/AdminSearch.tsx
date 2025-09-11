@@ -19,9 +19,15 @@ export const AdminSearch = (props: SearchInputProps) => {
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const [anyRegion, setAnyRegion] = useState<boolean>(false);
 
   useEffect(() => {
+    // This is to avoid extra API calls on initial render
+    if (firstLoad) {
+      setFirstLoad(false);
+      return;
+    }
     const timer = setTimeout(
       () => search({ firstName, lastName, email, anyRegion }, DEFAULT_PAGE_SIZE),
       QUERY_DELAY,

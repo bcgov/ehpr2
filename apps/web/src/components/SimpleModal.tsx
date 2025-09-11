@@ -13,7 +13,7 @@ type SimpleModalProps = PropsWithChildren & {
 export const SimepleModal = ({ title, open, onClose, children }: SimpleModalProps) => {
   return (
     <Modal open={open} handleClose={onClose}>
-      <DialogTitle className='flex flex-row text-lg font-bold leading-6 text-bcBlueLink border-b p-4'>
+      <DialogTitle className='flex flex-row text-lg font-bold leading-6 text-bc-blue-link border-b p-4'>
         <div>{title}</div>
         <button autoFocus={false} aria-label='Close modal' className='ml-auto' onClick={onClose}>
           <FontAwesomeIcon icon={faWindowClose} size='lg' />

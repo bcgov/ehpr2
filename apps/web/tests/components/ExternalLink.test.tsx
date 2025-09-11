@@ -33,6 +33,6 @@ describe('ExternalLink', () => {
 
     const externalLink = screen.getByRole('link');
 
-    expect(externalLink).toHaveAttribute('class', 'text-bcBlueLink underline');
+    expect(externalLink).toHaveAttribute('class', 'text-bc-blue-link underline');
   });
 });

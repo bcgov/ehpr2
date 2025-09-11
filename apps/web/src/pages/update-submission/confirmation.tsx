@@ -3,7 +3,7 @@ const Confirmation: React.FC = () => {
   return (
     <div className='md:pt-40 pt-12 px-5 md:px-4'>
       <div className='max-w-xl'>
-        <div className='md:text-4xl text-bcBluePrimary '>
+        <div className='md:text-4xl text-bc-blue-primary '>
           Thank you for updating your information in the Emergency Health Provider Registry.
         </div>
         <div>
@@ -11,7 +11,7 @@ const Confirmation: React.FC = () => {
         </div>
         <div>
           Please refer to the{' '}
-          <u className='text-bcBluePrimary'>
+          <u className='text-bc-blue-primary'>
             <Link href={'/'} variant='link'>
               EHPR homepage{' '}
             </Link>

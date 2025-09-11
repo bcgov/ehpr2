@@ -1,18 +1,17 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { SendEmailRequest } from 'aws-sdk/clients/ses';
+import { ServiceException } from '@smithy/smithy-client';
+import { SendEmailCommandInput, SendEmailCommandOutput, SESv2 } from '@aws-sdk/client-sesv2';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as handlebars from 'handlebars';
-import aws from 'aws-sdk';
 import { AppLogger } from '../common/logger.service';
 
 import { Mailable } from './mailables/mail-base.mailable';
 import { MailOptions } from './types/mail-options';
-import { PromiseResult } from 'aws-sdk/lib/request';
 
 @Injectable()
 export class MailService {
-  private readonly ses: aws.SES | null;
+  private readonly ses: SESv2 | null;
 
   constructor(@Inject(Logger) private readonly logger: AppLogger) {
     const templatePath = path.resolve(`${__dirname}/templates/partials/layout.hbs`);
@@ -21,13 +20,17 @@ export class MailService {
 
     if (process.env.RUNTIME_ENV === 'local') {
       // Local SES setup
-      this.ses = new aws.SES({
+      this.ses = new SESv2({
         endpoint: 'http://localhost:8005',
         region: 'aws-ses-v2-local',
+
+        // NOSONAR
         credentials: { accessKeyId: 'ANY_STRING', secretAccessKey: 'ANY_STRING' },
       });
     } else if (process.env.AWS_S3_REGION) {
-      this.ses = new aws.SES({ region: process.env.AWS_S3_REGION });
+      this.ses = new SESv2({
+        region: process.env.AWS_S3_REGION,
+      });
     } else {
       this.ses = null;
     }
@@ -43,7 +46,7 @@ export class MailService {
   public async sendMailable(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mailable: Mailable<any>,
-  ): Promise<PromiseResult<aws.SES.SendEmailResponse, aws.AWSError> | undefined> {
+  ): Promise<SendEmailCommandOutput | ServiceException | undefined> {
     const mailOptions: Partial<MailOptions> = {
       from: process.env.MAIL_FROM,
       to: [mailable.recipient.email],
@@ -61,24 +64,26 @@ export class MailService {
 
   public async sendMailWithSES(mailOptions: MailOptions) {
     if (!this.ses) return;
-    const params: SendEmailRequest = {
+    const params: SendEmailCommandInput = {
       Destination: {
         ToAddresses: [...mailOptions.to],
       },
-      Message: {
-        Body: {
-          Html: {
+      Content: {
+        Simple: {
+          Body: {
+            Html: {
+              Charset: 'UTF-8',
+              Data: mailOptions.body,
+            },
+          },
+          Subject: {
             Charset: 'UTF-8',
-            Data: mailOptions.body,
+            Data: mailOptions.subject,
           },
         },
-        Subject: {
-          Charset: 'UTF-8',
-          Data: mailOptions.subject,
-        },
       },
-      Source: process.env.MAIL_FROM ?? 'EHPRDoNotReply@dev.ehpr.freshworks.club',
+      FromEmailAddress: process.env.MAIL_FROM ?? 'EHPRDoNotReply@dev.ehpr.freshworks.club',
     };
-    return this.ses.sendEmail(params).promise();
+    return this.ses.sendEmail(params);
   }
 }

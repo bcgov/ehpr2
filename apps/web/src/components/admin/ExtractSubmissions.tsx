@@ -146,6 +146,8 @@ export const ExtractSubmissions = () => {
                 <div className='flex flex-row flex-wrap justify-start gap-4 my-8'>
                   <div className='flex flex-col gap-4 min-w-[480px] max-w-[500px] mb-4'>
                     <Field name='stream'>
+                      {/* TODO: fix this later */}
+                      {/* @ts-expect-error: field and form are needed here */}
                       {({ field, form }: FieldProps) => (
                         <MultiSelect
                           label='Stream'
@@ -167,6 +169,8 @@ export const ExtractSubmissions = () => {
                       )}
                     </Field>
                     <Field name='specialties'>
+                      {/* TODO: fix this later */}
+                      {/* @ts-expect-error: field and form are needed here */}
                       {({ field, form }: FieldProps) => (
                         <MultiSelect
                           id={field.name}
@@ -187,6 +191,8 @@ export const ExtractSubmissions = () => {
                       )}
                     </Field>
                     <Field name='subspecialties'>
+                      {/* TODO: fix this later */}
+                      {/* @ts-expect-error: field and form are needed here */}
                       {({ field, form }: FieldProps) => (
                         <MultiSelect
                           id={field.name}
@@ -212,6 +218,8 @@ export const ExtractSubmissions = () => {
                     />
                     {!values.anywhereOnly && isMoh(loggedUser?.email) && (
                       <Field name='authorities'>
+                        {/* TODO: fix this later */}
+                        {/* @ts-expect-error: field and form are needed here */}
                         {({ field, form }: FieldProps) => (
                           <MultiSelect
                             label='Health Authority'
@@ -234,6 +242,8 @@ export const ExtractSubmissions = () => {
                     )}
                     {!values.anywhereOnly && (
                       <Field name='locations'>
+                        {/* TODO: fix this later */}
+                        {/* @ts-expect-error: field and form are needed here */}
                         {({ field, form }: FieldProps) => (
                           <MultiSelect
                             label='Communities'
@@ -254,6 +264,8 @@ export const ExtractSubmissions = () => {
                     )}
                     <Checkbox label={`Only include registered applicants`} name='registeredOnly' />
                     <Field name='currentEmployment'>
+                      {/* TODO: fix this later */}
+                      {/* @ts-expect-error: field and form are needed here */}
                       {({ field, form }: FieldProps) => (
                         <MultiSelect
                           label='Employment Status'

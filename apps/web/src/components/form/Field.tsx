@@ -8,6 +8,15 @@ export interface FieldProps extends FieldAttributes<any> {
   label?: string | React.ReactNode;
   description?: string | React.ReactNode;
   disabled?: boolean;
+  type?: string;
+  min?: string | number | Date;
+  validate?: (value: string) => string | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  as?: string | React.ComponentType<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  component?: React.ComponentType<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  children?: React.ReactNode | ((props: any) => React.ReactNode);
   className?: string;
   maxLength?: number;
 }
@@ -18,6 +27,8 @@ export const Field: React.FC<FieldProps> = props => {
     disabled,
     type,
     as,
+    min,
+    validate,
     component,
     className,
     maxLength,
@@ -44,12 +55,14 @@ export const Field: React.FC<FieldProps> = props => {
           className ??
           classnames(
             `w-full rounded-none bg-gray-100 block h-10
-            border-b-2 border-bcBlack pl-1 disabled:bg-bcDisabled`,
+            border-b-2 border-bc-black pl-1 disabled:bg-bc-disabled`,
             {
               'border-red-500': meta.touched && meta.error,
             },
           )
         }
+        min={min}
+        validate={validate}
         disabled={disabled}
         as={as}
         type={type}

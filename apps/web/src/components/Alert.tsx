@@ -10,25 +10,25 @@ type AlertProps = {
 
 export const Alert = ({ color, children }: AlertProps) => {
   let containerClasses = '';
-  const baseClasses = 'py-4 text-left flex items-center rounded';
+  const baseClasses = 'py-4 text-left flex items-center rounded-sm';
 
   switch (color) {
     case 'red':
-      containerClasses = classNames(baseClasses, 'bg-bcRedError');
+      containerClasses = classNames(baseClasses, 'bg-bc-red-error');
       break;
     case 'yellow':
-      containerClasses = classNames(baseClasses, 'bg-bcYellowCream');
+      containerClasses = classNames(baseClasses, 'bg-bc-yellow-cream');
       break;
     default:
-      containerClasses = classNames(baseClasses, 'bg-bcLightBlueBackground');
+      containerClasses = classNames(baseClasses, 'bg-bc-light-blue-background');
   }
 
   return (
     <div className={containerClasses}>
-      <div className='px-5 text-bcBluePrimary'>
+      <div className='px-5 text-bc-blue-primary'>
         <FontAwesomeIcon className='h-6' icon={faExclamationCircle}></FontAwesomeIcon>
       </div>
-      <div className='text-bcBluePrimary'>{children}</div>
+      <div className='text-bc-blue-primary'>{children}</div>
     </div>
   );
 };

@@ -38,7 +38,7 @@ interface CheckboxArrayProps {
 export const CheckboxArray: React.FC<CheckboxArrayProps> = ({ name, legend, options }) => {
   return (
     <fieldset className='flex flex-col gap-4'>
-      <legend className='text-bcBlack font-bold mb-2'>{legend}</legend>
+      <legend className='text-bc-black font-bold mb-2'>{legend}</legend>
       {options.map(option => (
         <Checkbox key={option.value} name={name} value={option.value} label={option.label} />
       ))}
