@@ -1190,7 +1190,7 @@ __metadata:
     jsonwebtoken: 9.0.2
     jwks-rsa: 3.2.0
     limiter: 3.0.0
-    nanoid: 5.1.5
+    nanoid: ^3.3.7
     nest-winston: 1.10.2
     nodemailer: 7.0.5
     pg: 8.16.3
@@ -13015,15 +13015,6 @@ __metadata:
   version: 2.0.0
   resolution: "mute-stream@npm:2.0.0"
   checksum: d2e4fd2f5aa342b89b98134a8d899d8ef9b0a6d69274c4af9df46faa2d97aeb1f2ce83d867880d6de63643c52386579b99139801e24e7526c3b9b0a6d1e18d6c
-  languageName: node
-  linkType: hard
-
-"nanoid@npm:5.1.5":
-  version: 5.1.5
-  resolution: "nanoid@npm:5.1.5"
-  bin:
-    nanoid: bin/nanoid.js
-  checksum: 6de2d006b51c983be385ef7ee285f7f2a57bd96f8c0ca881c4111461644bd81fafc2544f8e07cb834ca0f3e0f3f676c1fe78052183f008b0809efe6e273119f5
   languageName: node
   linkType: hard
 
