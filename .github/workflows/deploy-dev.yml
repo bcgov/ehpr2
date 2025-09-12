@@ -82,3 +82,4 @@ jobs:
         with:
           target: ${{ secrets.DEV_URL }}
           cmd_options: '-I'
+          token: ${{ secrets.GITHUB_TOKEN }}
