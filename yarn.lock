@@ -1216,7 +1216,7 @@ __metadata:
   resolution: "@ehpr/common@workspace:packages/common"
   dependencies:
     "@types/jest": 26.0.14
-    "@types/node": 16.11.7
+    "@types/node": 24.3.0
     class-transformer: 0.5.1
     class-validator: 0.14.1
     eslint: 8.57.0
@@ -4978,13 +4978,6 @@ __metadata:
   dependencies:
     undici-types: ~7.8.0
   checksum: 01f9a97909eec619d937af3bc00ac49461e1846656b4d060f648145df06508eb6d77c200637a792481ee93a73976ced46cfbbdfe307e79be0f58ccdc415dfcd2
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:16.11.7":
-  version: 16.11.7
-  resolution: "@types/node@npm:16.11.7"
-  checksum: 2706403e6efc4aa40fdce8f0b5d9884d5600c3c8610aedc7fa5e7e298d30366f7e8b7296028d52898dca3edef4c3e827b03bf20952c4780f13fa4e79864f7a86
   languageName: node
   linkType: hard
 
