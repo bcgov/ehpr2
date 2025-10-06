@@ -15,12 +15,23 @@ export const RecipientTable = ({ recipients }: RecipientTableProps) => {
           </tr>
         </thead>
         <tbody className='text-sm'>
-          {recipients?.map(r => (
-            <tr key={r.id} className='border border-bc-light-gray'>
-              <td className='py-3 px-5'>{r.id.split('-')[0]}</td>
-              <td className='py-3 px-5'>{r.email}</td>
-            </tr>
-          ))}
+          {recipients?.map((r, index) => {
+            if (typeof r === 'object')
+              return (
+                <tr key={r.id} className='border border-bc-light-gray'>
+                  <td className='py-3 px-5'>{r.id.split('-')[0]}</td>
+                  <td className='py-3 px-5'>{r.email}</td>
+                </tr>
+              );
+            if (typeof r === 'string')
+              return (
+                <tr key={r + index} className='border border-bc-light-gray'>
+                  <td className='py-3 px-5'>{r}</td>
+                  <td className='py-3 px-5'>Legacy record before email was added</td>
+                </tr>
+              );
+            return null;
+          })}
         </tbody>
       </table>
     </div>
