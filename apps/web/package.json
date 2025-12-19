@@ -41,7 +41,7 @@
     "dayjs": "1.11.9",
     "formik": "2.4.6",
     "lodash": "4.17.21",
-    "next": "15.4.8",
+    "next": "15.4.10",
     "next-secure-headers": "2.2.0",
     "oidc-client-ts": "^3.3.0",
     "react": "19.1.2",
