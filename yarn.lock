@@ -1192,7 +1192,7 @@ __metadata:
     limiter: 3.0.0
     nanoid: ^3.3.7
     nest-winston: 1.10.2
-    nodemailer: 7.0.5
+    nodemailer: 7.0.11
     pg: 8.16.3
     reflect-metadata: 0.2.2
     rimraf: 6.0.1
@@ -13207,10 +13207,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:7.0.5":
-  version: 7.0.5
-  resolution: "nodemailer@npm:7.0.5"
-  checksum: 13d986d5cea1d7ce0c1d624c989a711f0b9d040d21063961428287747fe1897ddef78cdefcb7b4428acb09d833c8456b563b933aca1f77f76532a6e8fa994fd4
+"nodemailer@npm:7.0.11":
+  version: 7.0.11
+  resolution: "nodemailer@npm:7.0.11"
+  checksum: 02940a5a620e219522c049f54f69af7abdc99c2ec168f592d3c67e26980a9857d7c45c65989cbd835af2c0ffabc66c20198aff484197566385594b2653069cb8
   languageName: node
   linkType: hard
 
