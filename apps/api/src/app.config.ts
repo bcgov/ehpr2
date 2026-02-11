@@ -54,6 +54,9 @@ export async function createNestApp(): Promise<{
     app.useLogger(new AppLogger());
   }
 
+  // Enable extended query parser for Express v5 (supports nested objects and arrays)
+  app.set('query parser', 'extended');
+
   // Required for mass email request size
   app.useBodyParser('json', { limit: '10mb' });
   // Api prefix api/v1/
