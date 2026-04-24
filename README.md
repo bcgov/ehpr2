@@ -65,13 +65,40 @@ When you create a pull request, be aware that a GitHub action for each project w
 - [pr-check-web-a11y](.github/workflows/pr-check-web-a11y.yml)
 - [pr-check-terraform](.github/workflows/pr-check-terraform.yml)
 
+## Zscaler Certificate Setup (BC Gov / Corporate Network)
+
+If you are on a network that uses Zscaler (e.g. BC Government), you may encounter SSL errors like `unable to get local issuer certificate` when running `yarn` or `make docker-run`. Follow these steps to resolve it.
+
+### 1. Extract the certificate from macOS Keychain
+
+```bash
+make setup-cert
+```
+
+This runs [certs/macos-setup.sh](certs/macos-setup.sh), which extracts the **Zscaler Root CA** from your macOS System Keychain and saves it to `certs/zscaler-root-ca.pem`. The file is gitignored and must be generated locally by each developer.
+
+### 2. Configure Node.js to trust the certificate
+
+Add to your `~/.zshrc`:
+
+```bash
+echo 'export NODE_EXTRA_CA_CERTS=/path/to/ehpr2/certs/zscaler-root-ca.pem' >> ~/.zshrc
+source ~/.zshrc
+```
+
+Replace `/path/to/ehpr2` with your actual repo path.
+
+> **Note:** If you are not on a Zscaler network, skip this section entirely.
+
+---
+
 ## How to run the apps
 
 ### Preparation
 
 - Install NodeJS 16+ as a runtime environment by [nvm](https://github.com/nvm-sh/nvm)
 - Install [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable) as a package manager
-- Install and run [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- Install and run [Docker Desktop](https://www.docker.com/products/docker-desktop/) or [Rancher Desktop](https://rancherdesktop.io/)
 - Check out the repository
   ```bash
   $ git clone https://github.com/bcgov/ehpr2
@@ -109,6 +136,15 @@ When you create a pull request, be aware that a GitHub action for each project w
   > If SLACK_ALERTS_WEBHOOK_URL is defined and a submission fails with an exception, the error message will be sent to the Slack channel.
 
 ### Run as docker containers
+
+**WARNING:** if your organization uses a VPN or HTTP proxy which listens to TLS traffic you will likely get an error saying something to the effect of:
+
+```
+TLS/SSL CANNOT BE ESTABLISHED
+LOCAL ISSUER CERTIFICATE COULD NOT BE VERIFIED
+```
+
+To repair this you will need to add your enterprise's TLS certificate to the repository and import it into the docker container. For macOS you can run the script `certs/macos-setup.sh`. CGI uses Zscaler so the default is *Zscaler Root CA*. Adjust the variable as necessary for your organization. Note that the `Dockerfile` expects the `zscaler-root-ca.pem` file that is generated. The `Dockerfile` must also be updated if the script is changed.
 
 The `Make` command `docker-run` to build and launch containers is defined in [Makefile](Makefile).
 

@@ -21,7 +21,7 @@ export class MailService {
     if (process.env.RUNTIME_ENV === 'local') {
       // Local SES setup
       this.ses = new SESv2({
-        endpoint: 'http://localhost:8005',
+        endpoint: process.env.SES_ENDPOINT ?? 'http://localhost:8005',
         region: 'aws-ses-v2-local',
 
         // NOSONAR

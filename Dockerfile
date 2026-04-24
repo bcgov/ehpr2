@@ -1,6 +1,5 @@
-FROM node:22-alpine
+FROM node:22.22.2-alpine
 
-# RUN yarn set version berry
 # Copying repo resources
 COPY ./packages ./packages
 COPY ./apps ./apps

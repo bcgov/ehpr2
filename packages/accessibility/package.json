@@ -1,6 +1,6 @@
 {
   "name": "@ehpr/accessibility",
-  "packageManager": "yarn@3.1.0",
+  "packageManager": "yarn@4.14.1",
   "scripts": {
     "accessibility-test": "node src/run-pa11y-ci.js",
     "generate-accessibility-results": "echo 'Generating markdown test output' && node src/generate-a11y-markdown out/submission_accessibility_results.json"
