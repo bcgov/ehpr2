@@ -95,7 +95,7 @@ endef
 export TF_BACKEND_CFG
 
 
-.PHONY: app-local print-env start-local-db bootstrap bootstrap-terraform
+.PHONY: app-local print-env start-local-db bootstrap bootstrap-terraform setup-cert
 
 # Aliases 
 bootstrap-terraform: print-env bootstrap
@@ -155,10 +155,15 @@ docker-build:
 	@docker compose build
 	@echo "++\n*****"
 
+setup-cert:
+	@echo "++\n***** Setting up Zscaler certificate\n++"
+	@chmod +x ./certs/macos-setup.sh && ./certs/macos-setup.sh
+	@echo "++\n*****"
+
 docker-run:
 	@echo "++\n***** Running docker compose\n++"
 	@yarn
-	@docker build . --target=local -t ehpr_base:latest
+	@docker compose build
 	@docker compose up
 	@echo "++\n*****"
 

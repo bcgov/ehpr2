@@ -65,6 +65,33 @@ When you create a pull request, be aware that a GitHub action for each project w
 - [pr-check-web-a11y](.github/workflows/pr-check-web-a11y.yml)
 - [pr-check-terraform](.github/workflows/pr-check-terraform.yml)
 
+## Zscaler Certificate Setup (BC Gov / Corporate Network)
+
+If you are on a network that uses Zscaler (e.g. BC Government), you may encounter SSL errors like `unable to get local issuer certificate` when running `yarn` or `make docker-run`. Follow these steps to resolve it.
+
+### 1. Extract the certificate from macOS Keychain
+
+```bash
+make setup-cert
+```
+
+This runs [certs/macos-setup.sh](certs/macos-setup.sh), which extracts the **Zscaler Root CA** from your macOS System Keychain and saves it to `certs/zscaler-root-ca.pem`. The file is gitignored and must be generated locally by each developer.
+
+### 2. Configure Node.js to trust the certificate
+
+Add to your `~/.zshrc`:
+
+```bash
+echo 'export NODE_EXTRA_CA_CERTS=/path/to/ehpr2/certs/zscaler-root-ca.pem' >> ~/.zshrc
+source ~/.zshrc
+```
+
+Replace `/path/to/ehpr2` with your actual repo path.
+
+> **Note:** If you are not on a Zscaler network, skip this section entirely.
+
+---
+
 ## How to run the apps
 
 ### Preparation
