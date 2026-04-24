@@ -158,7 +158,8 @@ docker-build:
 docker-run:
 	@echo "++\n***** Running docker compose\n++"
 	@yarn
-	@docker compose up --build
+	@docker build . --target=local -t ehpr_base:latest
+	@docker compose up
 	@echo "++\n*****"
 
 api-unit-test:

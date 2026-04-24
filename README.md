@@ -71,7 +71,7 @@ When you create a pull request, be aware that a GitHub action for each project w
 
 - Install NodeJS 16+ as a runtime environment by [nvm](https://github.com/nvm-sh/nvm)
 - Install [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable) as a package manager
-- Install and run [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- Install and run [Docker Desktop](https://www.docker.com/products/docker-desktop/) or [Rancher Desktop](https://rancherdesktop.io/)
 - Check out the repository
   ```bash
   $ git clone https://github.com/bcgov/ehpr2
@@ -109,6 +109,15 @@ When you create a pull request, be aware that a GitHub action for each project w
   > If SLACK_ALERTS_WEBHOOK_URL is defined and a submission fails with an exception, the error message will be sent to the Slack channel.
 
 ### Run as docker containers
+
+**WARNING:** if your organization uses a VPN or HTTP proxy which listens to TLS traffic you will likely get an error saying something to the effect of:
+
+```
+TLS/SSL CANNOT BE ESTABLISHED
+LOCAL ISSUER CERTIFICATE COULD NOT BE VERIFIED
+```
+
+To repair this you will need to add your enterprise's TLS certificate to the repository and import it into the docker container. For macOS you can run the script `certs/macos-setup.sh`. CGI uses Zscaler so the default is *Zscaler Root CA*. Adjust the variable as necessary for your organization. Note that the `Dockerfile` expects the `zscaler-root-ca.pem` file that is generated. The `Dockerfile` must also be updated if the script is changed.
 
 The `Make` command `docker-run` to build and launch containers is defined in [Makefile](Makefile).
 
