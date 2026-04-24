@@ -9,12 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: setup node v22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Install Yarn 4.14.1
-        run: corepack enable && corepack prepare yarn@4.14.1 --activate
       - uses: actions/checkout@v4
         name: checkout
       - uses: actions/cache@v4
@@ -30,16 +24,23 @@ jobs:
       - name: Build dependencies
         run: yarn build-common
 
-      - name: Start web app
-        run: NEXT_PUBLIC_PREFILLED_FORM=true yarn workspace @ehpr/web dev &
+      - name: Build web app
+        run: yarn workspace @ehpr/web build
 
-      - name: sleep until webapp is up
+      - name: Start web app
+        run: NEXT_PUBLIC_PREFILLED_FORM=true yarn workspace @ehpr/web start &
+
+      - name: Wait for web app
         run: |
-          until $(curl --output /dev/null --silent --fail http://localhost:3000); do
-              echo '.'
-              ((c++)) && ((c==10)) && c=0 && break # don't run more than 10 times
-              sleep 5
+          for i in {1..30}; do
+            if curl --silent --fail http://localhost:3000; then
+              echo "App is up"
+              exit 0
+            fi
+            sleep 2
           done
+          echo "App failed to start"
+          exit 1
 
       - name: Accessibility Test web package
         run: make accessibility-test
@@ -49,6 +50,7 @@ jobs:
         if: ${{ failure() }}
 
       - uses: actions/github-script@v3
+        if: ${{ failure() }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -60,4 +62,3 @@ jobs:
               repo: context.repo.repo,
               body: comment
             })
-        if: ${{ failure() }}
