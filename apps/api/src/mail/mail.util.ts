@@ -14,20 +14,19 @@ export const getBodyWithFooter = (body: string, token: string, domain?: string) 
         <footer style="text-align: left;">
           <table cellspacing="0" style="width: 100%">
             <tr>
-              <td style="border: solid 1px gray; margin: 0; border-right: none; width: 100px; background-color: #FFFFFF !important">
+              <td style="width: 80px; padding-right: 10px;">
                 <img
                   src="${logoUrl}"
                   alt="Ministry of Health"
-                  style="width: 100px; height: 100px;"
+                  style="width: 60px; height: auto;"
                 />
               </td>
               <td
                 style="
                   color: #2e4877;
-                  border: solid 1px gray;
-                  border-left-color: #bb902d;
-                  line-height: 24px;
-                  padding: 8px;
+                  line-height: 20px;
+                  padding-left: 12px;
+                  border-left: 1px solid #bb902d;
                 "
               >
                 <p style="margin: 0">
@@ -38,7 +37,9 @@ export const getBodyWithFooter = (body: string, token: string, domain?: string) 
                 </p>
                 <span>
                   <b>Email:</b>
-                  <a href="mailto:EHPRQuestions@gov.bc.ca"> ehprquestions@gov.bc.ca </a>
+                  <a href="mailto:EHPRQuestions@gov.bc.ca">
+                    ehprquestions@gov.bc.ca
+                  </a>
                 </span>
               </td>
             </tr>
