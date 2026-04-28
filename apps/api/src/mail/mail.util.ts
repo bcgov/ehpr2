@@ -3,9 +3,10 @@ export const getBodyWithFooter = (body: string, token: string, domain?: string) 
     ? `https://${domain}/unsubscribe?token=${token}`
     : `https://ehpr.gov.bc.ca/unsubscribe?token=${token}`;
 
-  const logoUrl = domain && !domain.startsWith('localhost')
-    ? `https://${domain}/assets/img/MOH_Logo.png`
-    : `https://ehpr.gov.bc.ca/assets/img/MOH_Logo.png`;
+  const logoUrl =
+    domain && !domain.startsWith('localhost')
+      ? `https://${domain}/assets/img/MOH_Logo.png`
+      : `https://ehpr.gov.bc.ca/assets/img/MOH_Logo.png`;
 
   return `
     <html>
