@@ -3,9 +3,10 @@ export const getBodyWithFooter = (body: string, token: string, domain?: string) 
     ? `https://${domain}/unsubscribe?token=${token}`
     : `https://ehpr.gov.bc.ca/unsubscribe?token=${token}`;
 
-  const logoUrl = domain
-    ? `https://${domain}/assets/img/MOH_Logo.png`
-    : `https://ehpr.gov.bc.ca/assets/img/MOH_Logo.png`;
+  const logoUrl =
+    domain && !domain.startsWith('localhost')
+      ? `https://${domain}/assets/img/MOH_Logo.png`
+      : `https://ehpr.gov.bc.ca/assets/img/MOH_Logo.png`;
 
   return `
     <html>
@@ -18,7 +19,9 @@ export const getBodyWithFooter = (body: string, token: string, domain?: string) 
                 <img
                   src="${logoUrl}"
                   alt="Ministry of Health"
-                  style="width: 60px; height: auto;"
+                  width="100"
+                  height="100"
+                  style="width: 100px; height: 100px;"
                 />
               </td>
               <td
